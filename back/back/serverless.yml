@@ -13,16 +13,22 @@ provider:
   # domain: api.example.com
 
 functions:
-  hello:
-    handler: handler.hello
+  preRegistration:
+    handler: handlers/auth.preSignUp
     events:
-      - httpApi:
-          path: /
-          method: get
+      - cognitoUserPool:
+          pool: MapsterUserPool
+          trigger: PreSignUp
+
+  postConfirmation:
+    handler: handlers/auth.postConfirmation
+    events:
+      - cognitoUserPool:
+          pool: MapsterUserPool
+          trigger: PostConfirmation
 
 resources:
   Resources:
-    
     #region Cognito
 
     CognitoUserPool:
@@ -60,7 +66,7 @@ resources:
             RequireUppercase: false
             RequireNumbers: false
             RequireSymbols: false
-    
+
     AdminGroup:
       Type: AWS::Cognito::UserPoolGroup
       Properties:
@@ -68,7 +74,7 @@ resources:
         UserPoolId: !Ref CognitoUserPool
         Description: "Mapster administrators group"
         Precedence: 1
-    
+
     UserGroup:
       Type: AWS::Cognito::UserPoolGroup
       Properties:
@@ -88,6 +94,5 @@ resources:
           - USER_PASSWORD_AUTH
           - REFRESH_TOKEN_AUTH
         PreventUserExistenceErrors: true
-    
+
     #endregion
-    
