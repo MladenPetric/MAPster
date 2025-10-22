@@ -10,6 +10,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { UploadMusicComponent } from './music/upload-music/upload-music.component';
 import { 
   HttpClientModule,
   provideHttpClient,
@@ -25,7 +26,8 @@ import { authInterceptor } from '../services/auth.interceptor';
     CreateArtistComponent,
     LoginComponent,
     RegisterComponent,
-    NavBarComponent
+    NavBarComponent,
+    UploadMusicComponent
   ],
   imports: [
     BrowserModule,

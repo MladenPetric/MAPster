@@ -7,6 +7,7 @@
   <div class="navbar-center">
     <ng-container *ngIf="userRole === 'ROLE_ADMIN'">
       <a routerLink="/admin/create-artist" class="nav-link">Create artist</a>
+      <a routerLink="/admin/upload-music" class="nav-link">Upload music</a>
     </ng-container>
 
     <ng-container *ngIf="userRole === 'ROLE_USER'">

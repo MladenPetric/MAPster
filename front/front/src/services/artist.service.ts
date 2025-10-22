@@ -14,4 +14,8 @@ export class ArtistService {
   createArtist(artist: Artist): Observable<any> {
     return this.http.post<any>(this.apiUrl, artist);
   }
+
+  getArtists(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
 }
