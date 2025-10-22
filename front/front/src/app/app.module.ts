@@ -10,8 +10,13 @@ import { RegisterComponent } from './auth/register/register.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { UploadMusicComponent } from './music/upload-music/upload-music.component';
+import { 
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import { authInterceptor } from '../services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,7 +36,7 @@ import { UploadMusicComponent } from './music/upload-music/upload-music.componen
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [provideHttpClient(withInterceptors([authInterceptor]))],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

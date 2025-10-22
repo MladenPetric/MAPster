@@ -14,34 +14,38 @@ provider:
     MUSIC_BUCKET: ${self:service}-music-bucket
     MUSIC_FILES_TABLE: ${self:service}-music-files
     MUSIC_META_TABLE: ${self:service}-music-meta
+    ALBUMS_TABLE: ${self:service}-albums
   iam:
     role:
       statements:
         - Effect: "Allow"
           Action:
             - "dynamodb:PutItem"
+            - "dynamodb:Scan"
+            - "dynamodb:GetItem"
           Resource:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums"
   httpApi:
     cors:
-      allowedOrigins:        
-        - '*'                        # Dozvoljava POST metodu i Preflight OPTIONS metod
-      allowedMethods: 
-        - 'GET'
-        - 'POST'
-        - 'OPTIONS'                 # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
-      allowedHeaders: 
-        - 'Content-Type'
-        - 'Authorization'
-      maxAge: 600                    # Opcionalno: Keširanje preflight odgovora na 10 minuta (600 sekundi)
+      allowedOrigins:
+        - "*" # Dozvoljava POST metodu i Preflight OPTIONS metod
+      allowedMethods:
+        - "GET"
+        - "POST"
+        - "OPTIONS" # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
+      allowedHeaders:
+        - "Content-Type"
+        - "Authorization"
+      maxAge: 600 # Opcionalno: Keširanje preflight odgovora na 10 minuta (600 sekundi)
     authorizers:
       # bouncer:
       #     identitySource: $request.header.Authorization
-      #     issuerUrl: 
+      #     issuerUrl:
       #       Fn::sub: https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}
       #     audience:
-      #       - !Ref CognitoUserPoolClientWeb 
-     # Authorizer - ne dozvoljava pristup lambda funkcijama ako je access token validan!
+      #       - !Ref CognitoUserPoolClientWeb
+      # Authorizer - ne dozvoljava pristup lambda funkcijama ako je access token validan!
       cognitoAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
@@ -71,6 +75,14 @@ functions:
           path: /artists
           method: post
 
+  filterHandler:
+    handler: handlers.filter.filter_handler
+    events:
+      - httpApi:
+          path: /filter
+          method: get
+          cors: true
+
   getArtists:
     handler: handlers.get-artists.lambda_handler
     events:
@@ -91,12 +103,10 @@ functions:
       - httpApi:
           path: /music
           method: post
-        
-     
+
 
 resources:
   Resources:
-
     ArtistsDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -109,6 +119,22 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
+    AlbumsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-albums
+        AttributeDefinitions:
+          - AttributeName: genre
+            AttributeType: S
+          - AttributeName: albumId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: genre
+            KeyType: HASH
+          - AttributeName: albumId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+    #region Cognito
     MusicS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -139,15 +165,16 @@ resources:
         BillingMode: PAY_PER_REQUEST
 
 
+
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
         UserPoolName: MapsterUserPool
         UsernameAttributes: [email]
         AutoVerifiedAttributes: [email]
-#        SelfSignUpEnabled: true
-#        AccountRecoverySetting:
-#          RecoveryMechanisms: []
+        #        SelfSignUpEnabled: true
+        #        AccountRecoverySetting:
+        #          RecoveryMechanisms: []
 
         AdminCreateUserConfig:
           AllowAdminCreateUserOnly: false
