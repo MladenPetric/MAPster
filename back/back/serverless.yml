@@ -11,6 +11,9 @@ provider:
   region: eu-central-1
   environment:
     ARTISTS_TABLE: ${self:service}-artists
+    MUSIC_BUCKET: ${self:service}-music-bucket
+    MUSIC_FILES_TABLE: ${self:service}-music-files
+    MUSIC_META_TABLE: ${self:service}-music-meta
   iam:
     role:
       statements:
@@ -67,6 +70,27 @@ functions:
       - httpApi:
           path: /artists
           method: post
+
+  getArtists:
+    handler: handlers.get-artists.lambda_handler
+    events:
+      - httpApi:
+          path: /artists
+          method: get
+
+  getAlbums:
+    handler: handlers.get-album.lambda_handler
+    events:
+      - httpApi:
+          path: /albums
+          method: get
+
+  uploadMusic:
+    handler: handlers.get-music.lambda_handler
+    events:
+      - httpApi:
+          path: /music
+          method: post
         
      
 
@@ -84,7 +108,36 @@ resources:
           - AttributeName: artistId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-    #region Cognito
+
+    MusicS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:service}-music-bucket
+
+    MusicFilesDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-music-files
+        AttributeDefinitions:
+          - AttributeName: musicId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: musicId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    MusicMetaDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-music-meta
+        AttributeDefinitions:
+          - AttributeName: musicId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: musicId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
 
     CognitoUserPool:
       Type: AWS::Cognito::UserPool

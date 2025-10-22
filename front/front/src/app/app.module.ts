@@ -11,6 +11,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { UploadMusicComponent } from './music/upload-music/upload-music.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     CreateArtistComponent,
     LoginComponent,
     RegisterComponent,
-    NavBarComponent
+    NavBarComponent,
+    UploadMusicComponent
   ],
   imports: [
     BrowserModule,

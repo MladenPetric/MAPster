@@ -5,6 +5,7 @@ import { HomeUserComponent } from './home/home-user/home-user.component';
 import { CreateArtistComponent } from './artist/create-artist/create-artist.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { UploadMusicComponent } from './music/upload-music/upload-music.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -16,6 +17,7 @@ const routes: Routes = [
     data: { roles: ['ROLE_ADMIN'] },
     children: [
       { path: 'create-artist', component: CreateArtistComponent }, 
+      { path: 'upload-music', component: UploadMusicComponent }, 
     ],
   },
   {
