@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,14 +16,17 @@ export class LoginComponent {
   userId = '';
   organization = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthService) {
+    auth.userRole$
+          .pipe(filter(role => !!role))
+          .subscribe(role => {
+            router.navigate([`/${role.toLowerCase()}`]).then();
+            localStorage.setItem('userRole', `ROLE_${role.toUpperCase()}`);
+          });
+  }
 
- onLogin() {
-    
-
-
-    localStorage.setItem('userRole', 'ROLE_ADMIN')
-     this.router.navigate(['/admin']);
+  onLogin() {
+    this.auth.logIn(this.username, this.password);
   }
 
 }
