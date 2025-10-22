@@ -1,0 +1,41 @@
+<div class="register-wrapper" >
+    <h2 class="register-title-main">REGISTER</h2>
+    <form class="register-form" [formGroup]="registerForm">
+      
+      <div class="form-row">
+        <div class="form-column">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Email" formControlName="email" name="email" />
+  
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Password" formControlName="password" name="password" />
+  
+          <label for="repeat-password">Repeat password</label>
+          <input type="password" id="repeat-password" placeholder="Repeat password" formControlName="repeatPassword" name="repeatPassword" />
+
+          <label for="firstname">Username</label>
+          <input type="text" id="username" placeholder="Username" formControlName="username" name="username" />
+        </div>
+  
+        <div class="form-column">
+          <label for="firstname">Firstname</label>
+          <input type="text" id="firstname" placeholder="Firstname" formControlName="firstName" name="firstName" />
+
+          <label for="lastname">Lastname</label>
+          <input type="text" id="lastname" placeholder="Lastname" formControlName="lastName" name="lastName" />
+       
+          <label for="organization">Date of birth</label>
+          <input type="date-local" formControlName="birthDate" id="birthDate" name="birthDate"/>
+
+        </div>
+      </div>
+  
+      <div class="form-footer">
+        <button type="button" class="next-button" (click)="onRegister()">REGISTER</button>
+        <div class="login-link">
+          <span>Already have account?</span>
+          <span class="login-text" routerLink="/login">Login</span>
+        </div>
+      </div>
+    </form>
+  </div>
