@@ -19,6 +19,32 @@ provider:
             - "dynamodb:PutItem"
           Resource:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
+  httpApi:
+    cors:
+      allowedOrigins:        
+        - '*'                        # Dozvoljava POST metodu i Preflight OPTIONS metod
+      allowedMethods: 
+        - 'GET'
+        - 'POST'
+        - 'OPTIONS'                 # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
+      allowedHeaders: 
+        - 'Content-Type'
+        - 'Authorization'
+      maxAge: 600                    # Opcionalno: Keširanje preflight odgovora na 10 minuta (600 sekundi)
+    authorizers:
+      # bouncer:
+      #     identitySource: $request.header.Authorization
+      #     issuerUrl: 
+      #       Fn::sub: https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}
+      #     audience:
+      #       - !Ref CognitoUserPoolClientWeb 
+     # Authorizer - ne dozvoljava pristup lambda funkcijama ako je access token validan!
+      cognitoAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: !Sub "https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}"
+        audience:
+          - !Ref CognitoUserPoolClientWeb
 
 functions:
   preRegistration:
@@ -36,12 +62,13 @@ functions:
           trigger: PostConfirmation
 
   createArtist:
-    handler: handlers/artist/create.lambda_handler
+    handler: handlers.artist-creation.lambda_handler
     events:
-      - http:
-          path: artists
+      - httpApi:
+          path: /artists
           method: post
-          cors: true
+        
+     
 
 resources:
   Resources:
@@ -63,11 +90,14 @@ resources:
       Type: AWS::Cognito::UserPool
       Properties:
         UserPoolName: MapsterUserPool
-        UsernameAttributes: [username]
-        AutoVerifiedAttributes: []
-        SelfSignUpEnabled: true
-        AccountRecoverySetting:
-          RecoveryMechanisms: []
+        UsernameAttributes: [email]
+        AutoVerifiedAttributes: [email]
+#        SelfSignUpEnabled: true
+#        AccountRecoverySetting:
+#          RecoveryMechanisms: []
+
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
 
         Schema:
           - Name: given_name
@@ -115,12 +145,12 @@ resources:
       Type: AWS::Cognito::UserPoolClient
       Properties:
         ClientName: MapsterWebClient
-        UserPoolId: !ref CognitoUserPool
+        UserPoolId: !Ref CognitoUserPool
         GenerateSecret: false
         ExplicitAuthFlows:
-          - USER_SRP_AUTH
-          - USER_PASSWORD_AUTH
-          - REFRESH_TOKEN_AUTH
-        PreventUserExistenceErrors: true
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        PreventUserExistenceErrors: ENABLED
 
     #endregion

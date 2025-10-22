@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-   username = '';
+  username = '';
   password = '';
   role = '';
   userId = '';
@@ -17,6 +17,9 @@ export class LoginComponent {
   constructor(private router: Router) {}
 
  onLogin() {
+    
+
+
     localStorage.setItem('userRole', 'ROLE_ADMIN')
      this.router.navigate(['/admin']);
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -11,7 +11,8 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService) {
+
+  constructor(private fb: FormBuilder) {
      this.registerForm = this.fb.group(
       {
         username: ['', Validators.required],
@@ -44,9 +45,9 @@ export class RegisterComponent {
   onRegister() {
     if (this.registerForm.invalid) {
       if (this.registerForm.errors?.['passwordsMismatch']) {
-        this.toastr.warning('Passwords do not match.');
+        alert('Passwords do not match.');
       } else {
-        this.toastr.warning('Please fill in all required fields correctly.');
+        alert('Please fill in all required fields correctly.');
       }
       return;
     }

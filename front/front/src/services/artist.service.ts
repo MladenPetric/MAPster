@@ -7,11 +7,11 @@ import { Artist } from '../models/artist.model';
   providedIn: 'root'
 })
 export class ArtistService {
-//   private apiUrl = 'https://YOUR_API_GATEWAY_ID.execute-api.eu-central-1.amazonaws.com/dev/artists';
+  private apiUrl = 'https://orbnzq4ol9.execute-api.eu-central-1.amazonaws.com/artists';
 
-//   constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-//   createArtist(artist: Artist): Observable<any> {
-//     return this.http.post<any>(this.apiUrl, artist);
-//   }
+  createArtist(artist: Artist): Observable<any> {
+    return this.http.post<any>(this.apiUrl, artist);
+  }
 }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators,} from '@angular/forms';
 import { ArtistService } from '../../../services/artist.service';
 import { Artist } from '../../../models/artist.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-artist',
@@ -11,15 +12,14 @@ import { Artist } from '../../../models/artist.model';
 })
 export class CreateArtistComponent {
   artistForm: FormGroup;
-  successMessage: string = '';
-  errorMessage: string = '';
 
   genresList: string[] = [
     'Pop', 'Rock', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'R&B', 'Country', 'Reggae', 'Blues'
   ];
 
   constructor(private fb: FormBuilder, private artistService: ArtistService) {
-    this.artistForm = this.fb.group({
+
+      this.artistForm = this.fb.group({
       name: ['', Validators.required],
       biography: ['', Validators.required],
       genres: [[], Validators.required] // multi-select
@@ -30,18 +30,16 @@ export class CreateArtistComponent {
     if (this.artistForm.valid) {
       const artist: Artist = this.artistForm.value;
 
-      // this.artistService.createArtist(artist).subscribe({
-      //   next: (res) => {
-      //     this.successMessage = 'Artist successfully created!';
-      //     this.errorMessage = '';
-      //     this.artistForm.reset();
-      //   },
-      //   error: (err) => {
-      //     this.errorMessage = 'Error creating artist';
-      //     this.successMessage = '';
-      //     console.error(err);
-      //   }
-      // });
+      this.artistService.createArtist(artist).subscribe({
+        next: (res) => {
+          alert('Artist successfully created!');
+          this.artistForm.reset();
+        },
+        error: (err) => {
+          alert('Error creating artist');
+          console.error(err);
+        }
+      });
     }
   }
 
