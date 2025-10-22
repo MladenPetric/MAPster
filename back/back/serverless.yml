@@ -84,26 +84,25 @@ functions:
           cors: true
 
   getArtists:
-    handler: handlers.get-artists.lambda_handler
+    handler: handlers.get_artists.lambda_handler
     events:
       - httpApi:
           path: /artists
           method: get
 
   getAlbums:
-    handler: handlers.get-album.lambda_handler
+    handler: handlers.get_album.lambda_handler
     events:
       - httpApi:
           path: /albums
           method: get
 
   uploadMusic:
-    handler: handlers.get-music.lambda_handler
+    handler: handlers.get_music.lambda_handler
     events:
       - httpApi:
           path: /music
           method: post
-
 
 resources:
   Resources:
@@ -163,8 +162,6 @@ resources:
           - AttributeName: musicId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-
-
 
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
