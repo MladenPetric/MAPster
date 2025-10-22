@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'front';
+  constructor(private router: Router) {}
+  
+  showNavbar(): boolean {
+    const currentRoute = this.router.url;
+    return !(currentRoute === '/login' || currentRoute === '/register');
+  }
 }

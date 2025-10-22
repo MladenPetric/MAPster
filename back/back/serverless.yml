@@ -8,9 +8,17 @@ service: back
 provider:
   name: aws
   runtime: python3.12
-  # Uncomment to easily set up a custom domain. Read the docs for more details:
-  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
-  # domain: api.example.com
+  region: eu-central-1
+  environment:
+    ARTISTS_TABLE: ${self:service}-artists
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:PutItem"
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
 
 functions:
   preRegistration:
@@ -27,8 +35,28 @@ functions:
           pool: MapsterUserPool
           trigger: PostConfirmation
 
+  createArtist:
+    handler: handlers/artist/create.lambda_handler
+    events:
+      - http:
+          path: artists
+          method: post
+          cors: true
+
 resources:
   Resources:
+
+    ArtistsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-artists
+        AttributeDefinitions:
+          - AttributeName: artistId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: artistId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
     #region Cognito
 
     CognitoUserPool:

@@ -1,0 +1,27 @@
+<form [formGroup]="artistForm" (ngSubmit)="onSubmit()">
+  <h2>Artist creation</h2>
+
+  <div class="form-group">
+    <label class="bold">Name:</label>
+    <input formControlName="name">
+  </div>
+
+  <div class="form-group">
+    <label class="bold">Biography:</label>
+    <textarea formControlName="biography"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label class="bold">Genres:</label>
+    <div class="checkbox-group">
+      <label *ngFor="let genre of genresList">
+        <input type="checkbox" [value]="genre" (change)="onGenreChange($event)"> {{ genre }}
+      </label>
+    </div>
+  </div>
+
+  <button type="submit">Create Artist</button>
+</form>
+
+<div *ngIf="successMessage" style="color:green">{{ successMessage }}</div>
+<div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>

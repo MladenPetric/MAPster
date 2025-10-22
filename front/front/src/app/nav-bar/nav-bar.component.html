@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="assets/music.png" alt="Logo" class="logo" />
+    <span class="app-name">MAPster</span>
+  </div>
+
+  <div class="navbar-center">
+    <ng-container *ngIf="userRole === 'ROLE_ADMIN'">
+      <a routerLink="/admin/create-artist" class="nav-link">Create artist</a>
+    </ng-container>
+
+    <ng-container *ngIf="userRole === 'ROLE_USER'">
+    </ng-container>
+  </div>
+
+  <div class="navbar-right">
+    <button class="logout-btn" (click)="onLogout()">Logout</button>
+  </div>
+</nav>
