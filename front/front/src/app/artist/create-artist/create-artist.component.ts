@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators,} from '@angular/forms';
 import { ArtistService } from '../../../services/artist.service';
 import { Artist } from '../../../models/artist.model';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-artist',

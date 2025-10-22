@@ -10,8 +10,6 @@ import { RegisterComponent } from './auth/register/register.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { ToastrModule } from 'ngx-toastr';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -29,14 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule,
-    BrowserAnimationsModule, 
-    ToastrModule.forRoot({
-      positionClass: 'toast-top-right',
-      timeOut: 3000,
-      progressBar: true,
-      closeButton: true
-    })
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
