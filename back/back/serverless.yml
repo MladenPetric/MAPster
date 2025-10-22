@@ -13,9 +13,86 @@ provider:
   # domain: api.example.com
 
 functions:
-  hello:
-    handler: handler.hello
+  preRegistration:
+    handler: handlers/auth.preSignUp
     events:
-      - httpApi:
-          path: /
-          method: get
+      - cognitoUserPool:
+          pool: MapsterUserPool
+          trigger: PreSignUp
+
+  postConfirmation:
+    handler: handlers/auth.postConfirmation
+    events:
+      - cognitoUserPool:
+          pool: MapsterUserPool
+          trigger: PostConfirmation
+
+resources:
+  Resources:
+    #region Cognito
+
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: MapsterUserPool
+        UsernameAttributes: [username]
+        AutoVerifiedAttributes: []
+        SelfSignUpEnabled: true
+        AccountRecoverySetting:
+          RecoveryMechanisms: []
+
+        Schema:
+          - Name: given_name
+            AttributeDataType: String
+            Required: true
+            Mutable: true
+          - Name: family_name
+            AttributeDataType: String
+            Required: true
+            Mutable: true
+          - Name: email
+            AttributeDataType: String
+            Required: true
+            Mutable: false
+          - Name: birthdate
+            AttributeDataType: String
+            Required: true
+            Mutable: true
+
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: true
+            RequireUppercase: false
+            RequireNumbers: false
+            RequireSymbols: false
+
+    AdminGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: Admin
+        UserPoolId: !Ref CognitoUserPool
+        Description: "Mapster administrators group"
+        Precedence: 1
+
+    UserGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: User
+        UserPoolId: !Ref CognitoUserPool
+        Description: "Mapster regular users group"
+        Precedence: 10
+
+    CognitoUserPoolClientWeb:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: MapsterWebClient
+        UserPoolId: !ref CognitoUserPool
+        GenerateSecret: false
+        ExplicitAuthFlows:
+          - USER_SRP_AUTH
+          - USER_PASSWORD_AUTH
+          - REFRESH_TOKEN_AUTH
+        PreventUserExistenceErrors: true
+
+    #endregion
