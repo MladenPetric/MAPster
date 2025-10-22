@@ -1,1 +1,33 @@
-<p>home-user works!</p>
+<div class="home-user-container">
+
+  <!-- Filter sekcija -->
+  <div class="filters">
+    <label for="genreSelect" class="filter-label">Filter by Genre:</label>
+    <select id="genreSelect" [(ngModel)]="selectedGenre" (change)="onGenreChange($event)" class="filter-select">
+      <option value="">All Genres</option>
+      <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+    </select>
+  </div>
+
+  <!-- Albume -->
+  <div class="albums section">
+    <h2 class="section-title">Albums</h2>
+    <div *ngIf="filteredAlbums.length === 0" class="empty-msg">No albums found.</div>
+    <div *ngFor="let album of filteredAlbums" class="card">
+      <h3 class="card-title">{{ album.title }}</h3>
+      <p class="card-sub">Artist: {{ album.artist }}</p>
+      <p class="card-sub">Genre: {{ album.genre }}</p>
+    </div>
+  </div>
+
+  <!-- Umetnici -->
+  <div class="artists section">
+    <h2 class="section-title">Artists</h2>
+    <div *ngIf="filteredArtists.length === 0" class="empty-msg">No artists found.</div>
+    <div *ngFor="let artist of filteredArtists" class="card">
+      <h3 class="card-title">{{ artist.name }}</h3>
+      <p class="card-sub">Genre: {{ artist.genre }}</p>
+    </div>
+  </div>
+
+</div>
