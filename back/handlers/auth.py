@@ -20,8 +20,11 @@ def preSignUp(event, context):
 
         if existing_users['Users']:
             logger.info("Email already exists")
-
-        event['response']['autoConfirmUser'] = True
+            raise Exception("Email already exists")
+    
+    event['response']['autoConfirmUser'] = True
+    event['response']['autoVerifyEmail'] = True
+    event['response']['autoVerifyPhone'] = True
 
     return event
 
@@ -29,9 +32,17 @@ def preSignUp(event, context):
 def postConfirmation(event, context):
     user_pool_id = event['userPoolId']
     username = event['userName']
+    password = event['request']['userAttributes'].get('password')
     group_name = 'User'
 
     try:
+        client.admin_set_user_password(
+            UserPoolId=user_pool_id,
+            Username=username,
+            Password=password,
+            Permanent=True
+        )
+
         client.admin_add_user_to_group(
             UserPoolId=user_pool_id,
             Username=username,
