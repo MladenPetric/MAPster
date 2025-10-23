@@ -1,5 +1,5 @@
 export interface GetAlbum {
-    id: string;
+    albumId: string;
     name: string;
     genre: string;
 }

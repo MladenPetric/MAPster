@@ -1,16 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicService {
-  private apiUrl = 'https://uii5ovbbv3.execute-api.eu-central-1.amazonaws.com/music';
+  private apiUrl = 'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/music';
 
   constructor(private http: HttpClient) {}
 
-  uploadMusic(trackData: any): Observable<any> {
-    return this.http.post(this.apiUrl, trackData);
+  getPresignedUrl(filename: string, contentType: string): Observable<any> {
+    const body = { filename, contentType };
+    return this.http.post(`${this.apiUrl}/presigned`, body);
+  }
+
+
+  uploadFileToS3(uploadUrl: string, file: File): Observable<HttpEvent<any>> {
+    const req = new HttpRequest('PUT', uploadUrl, file, {
+      headers: new HttpHeaders({}), 
+      reportProgress: true,
+    });
+    return this.http.request(req);
+  }
+
+  saveMetadata(metadata: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/metadata`, metadata);
   }
 }

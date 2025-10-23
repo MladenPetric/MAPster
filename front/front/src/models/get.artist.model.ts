@@ -1,5 +1,5 @@
 export interface GetArtist {
-  id: string;
+  artistId: string;
   name: string;
   biography: string;
   genres: string[];

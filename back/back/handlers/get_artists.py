@@ -1,3 +1,4 @@
+import json
 import boto3
 import os
 from boto3.dynamodb.conditions import Key
@@ -11,7 +12,7 @@ def lambda_handler(event, context):
         items = response.get('Items', [])
         return {
             "statusCode": 200,
-            "body": str(items)
+            "body": json.dumps(items)
         }
     except Exception as e:
         return {"statusCode": 500, "body": str(e)}

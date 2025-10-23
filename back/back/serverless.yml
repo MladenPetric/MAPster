@@ -26,11 +26,25 @@ provider:
           Resource:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-files"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta"
+
+        - Effect: "Allow"
+          Action:
+             - "s3:PutObject" 
+             - "s3:PutObjectAcl" 
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - "${self:service}-music-bucket"
+                - "/*"
   httpApi:
     cors:
       allowedOrigins:
         - "*" # Dozvoljava POST metodu i Preflight OPTIONS metod
       allowedMethods:
+        - "PUT"
         - "GET"
         - "POST"
         - "OPTIONS" # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
@@ -97,12 +111,30 @@ functions:
           path: /albums
           method: get
 
+
   uploadMusic:
-    handler: handlers.get_music.lambda_handler
+    handler: handlers/upload_music.lambda_handler
     events:
       - httpApi:
-          path: /music
+          path: /music/metadata
           method: post
+          cors: true
+
+  getPresignedUrl:
+    handler: handlers/get_presigned_url.lambda_handler
+    events:
+      - httpApi:
+          path: /music/presigned
+          method: post
+          cors: true
+
+  createAlbum:
+    handler: handlers.create_album.lambda_handler
+    events:
+      - httpApi:
+          path: /albums
+          method: post
+
 
 resources:
   Resources:
@@ -133,11 +165,24 @@ resources:
           - AttributeName: albumId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-    #region Cognito
+
+
     MusicS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:service}-music-bucket
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                 - '*'
+              AllowedMethods:
+                - PUT # KRITIČNO: Dozvoljavamo PUT za upload fajla
+                - GET
+                - POST
+              AllowedOrigins:
+               - '*' # Dozvolite pristup sa svih domena
+              MaxAge: 3000
+
 
     MusicFilesDynamoDBTable:
       Type: AWS::DynamoDB::Table

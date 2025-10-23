@@ -15,14 +15,25 @@
     <label for="artist">Izaberite umetnika:</label>
     <select id="artist" formControlName="artist">
       <option value="" disabled selected>Izaberite umetnika</option>
-      <option *ngFor="let a of artists" [value]="a.id">{{ a.name }}</option>
+      <option *ngFor="let a of artists" [value]="a.artistId">{{ a.name }}</option>
     </select>
 
     <label for="album">Izaberite album (opciono):</label>
     <select id="album" formControlName="album">
       <option value="" selected>Nema albuma</option>
-      <option *ngFor="let al of albums" [value]="al.id">{{ al.name }}</option>
+      <option *ngFor="let al of albums" [value]="al.albumId">{{ al.name }}</option>
     </select>
+
+    <label for="album">Kreirajte novi album (opciono):</label>
+    <input type="text" formControlName="newAlbumName" placeholder="Unesite novo ime albuma">
+
+    <div *ngIf="uploadForm.get('newAlbumName')?.enabled">
+      <label for="newAlbumGenre">Žanr novog albuma:</label>
+      <select id="newAlbumGenre" formControlName="newAlbumGenre">
+        <option value="" disabled selected>Izaberite žanr albuma</option>
+        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+      </select>
+    </div>
 
     <label for="file">Fajl pesme:</label>
     <input type="file" id="file" (change)="onFileSelected($event)" />
