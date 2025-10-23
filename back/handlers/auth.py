@@ -21,6 +21,8 @@ def preSignUp(event, context):
         if existing_users['Users']:
             logger.info("Email already exists")
 
+        event['response']['autoConfirmUser'] = True
+
     return event
 
 #dodaje rolu

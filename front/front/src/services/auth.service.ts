@@ -89,6 +89,18 @@ export class AuthService {
     // }
   }
 
+  public async register(request: any) {
+    const { username, password } = request;
+
+    const { user } = await Auth.signUp({
+      username, 
+      password,
+      attributes: Object.fromEntries(
+        Object.entries(request).filter(([key]) => ["given_name", "family_name", "birthdate", "email"].includes(key))
+      )
+    });
+  }
+
   private async tryLoadUser() {
     try {
       const user = await Auth.currentAuthenticatedUser();
