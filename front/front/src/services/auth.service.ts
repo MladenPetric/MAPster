@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "../models/user.model";
-import { BehaviorSubject, map, Observable } from "rxjs";
+import { BehaviorSubject, map } from "rxjs";
 import { Hub, Auth } from "aws-amplify";
 
 
@@ -57,18 +57,28 @@ export class AuthService {
 
 
   public logIn(username: string, password: string) {
-    Auth.signIn(username, password)
-        .then((user: User) => this._userSubject.next(user))
+    try {
+      Auth.signIn(username, password)
+        .then((user) => {
+          this._userSubject.next(user);
+        })
         .catch((err: any) => {
           console.log("Login failed", err);
           this._userSubject.next(null);
         });
+    } catch (error) {
+      console.error('Login failed', error);
+    } 
   }
 
   public logOut() {
-    Auth.signOut()
+    try {
+      Auth.signOut()
         .then(() => this._userSubject.next(null))
-        .catch(console.log.bind("Logout failed"));
+        .catch((err: any) => console.log("Logout failed", err));
+    } catch (err) {
+      console.log("Logout failed", err);
+    }
   }
 
   private async tryLoadUser() {
