@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { GetAlbum } from '../models/get.album.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlbumService {
   private apiUrl = 'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/albums';

@@ -1,5 +1,5 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: petardragicevic
+# org: petardragicevic
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: app
 # "service" is the name of this project. This will also be added to your AWS resource names.
@@ -23,6 +23,7 @@ provider:
             - "dynamodb:PutItem"
             - "dynamodb:Scan"
             - "dynamodb:GetItem"
+            - "dynamodb:Query"
           Resource:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums"
@@ -42,24 +43,19 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - "*" # Dozvoljava POST metodu i Preflight OPTIONS metod
+        - "*"
       allowedMethods:
         - "PUT"
         - "GET"
         - "POST"
-        - "OPTIONS" # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
+        - "PUT"
+        - "DELETE"
+        - "OPTIONS"
       allowedHeaders:
         - "Content-Type"
         - "Authorization"
-      maxAge: 600 # Opcionalno: Keširanje preflight odgovora na 10 minuta (600 sekundi)
+      maxAge: 600
     authorizers:
-      # bouncer:
-      #     identitySource: $request.header.Authorization
-      #     issuerUrl:
-      #       Fn::sub: https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}
-      #     audience:
-      #       - !Ref CognitoUserPoolClientWeb
-      # Authorizer - ne dozvoljava pristup lambda funkcijama ako je access token validan!
       cognitoAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
@@ -95,8 +91,10 @@ functions:
       - httpApi:
           path: /filter
           method: get
-          cors: true
-
+          request:
+            parameters:
+              querystrings:
+                genre: true
   getArtists:
     handler: handlers.get_artists.lambda_handler
     events:
@@ -207,6 +205,8 @@ resources:
           - AttributeName: musicId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
+    #region Cognito
 
     CognitoUserPool:
       Type: AWS::Cognito::UserPool

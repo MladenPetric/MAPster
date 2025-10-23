@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Artist } from '../models/artist.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ArtistService {
   private apiUrl = 'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/artists';

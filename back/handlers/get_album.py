@@ -1,7 +1,7 @@
 import json
 import boto3
 import os
-
+import json
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['ALBUMS_TABLE'])
 
