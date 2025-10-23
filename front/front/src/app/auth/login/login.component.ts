@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { filter } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -18,15 +18,18 @@ export class LoginComponent {
 
   constructor(private router: Router, private auth: AuthService) {
     auth.userRole$
-          .pipe(filter(role => !!role))
+          .pipe(
+            tap(console.log.bind(console, "Role: ")),
+            filter(role => !!role))
           .subscribe(role => {
-            router.navigate([`/${role.toLowerCase()}`]).then();
-            localStorage.setItem('userRole', `ROLE_${role.toUpperCase()}`);
+            let path = role == 'ROLE_ADMIN' ? '/admin' : '/user';
+            router.navigate([path]).then();
+            localStorage.setItem('userRole', role);
           });
   }
 
-  onLogin() {
-    this.auth.logIn(this.username, this.password);
+  async onLogin() {
+    await this.auth.logIn(this.username, this.password);
   }
 
 }

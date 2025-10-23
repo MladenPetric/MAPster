@@ -17,8 +17,9 @@ export class NavBarComponent {
     this.auth.userRole$.subscribe(role => this.userRole = role);
   }
 
-  onLogout() {
-      this.auth.logOut();
+  async onLogout() {
+      await this.auth.logOut();
+      localStorage.removeItem('userRole');
       this.router.navigate(['/login']);
     }
 }

@@ -30,7 +30,8 @@ export class AuthService {
   constructor() {
     Hub.listen('auth', async (data: any) => {
       const { payload } = data;
-      
+      console.log('Auth event: ', payload.event);
+
       switch (payload.event) {
         case 'signIn':
         case 'cognitoHostedUI':
@@ -56,29 +57,36 @@ export class AuthService {
   }
 
 
-  public logIn(username: string, password: string) {
-    try {
-      Auth.signIn(username, password)
-        .then((user) => {
-          this._userSubject.next(user);
-        })
-        .catch((err: any) => {
-          console.log("Login failed", err);
-          this._userSubject.next(null);
-        });
-    } catch (error) {
-      console.error('Login failed', error);
-    } 
+  public async logIn(username: string, password: string) {
+    const user = await Auth.signIn(username, password);
+    //await Auth.completeNewPassword(user, password);
+
+    // try {
+    //   Auth.signIn(username, password)
+    //     .then(async (user) => {
+    //       if (user.challengeName == 'NEW_PASSWORD_REQUIRED') {
+    //         await Auth.completeNewPassword(username, password);
+    //       }
+    //       this._userSubject.next(user);
+    //     })
+    //     .catch((err: any) => {
+    //       //console.log("Login failed", err);
+    //       this._userSubject.next(null);
+    //     });
+    // } catch (error) {
+    //   //console.error('Login failed', error);
+    // } 
   }
 
-  public logOut() {
-    try {
-      Auth.signOut()
-        .then(() => this._userSubject.next(null))
-        .catch((err: any) => console.log("Logout failed", err));
-    } catch (err) {
-      console.log("Logout failed", err);
-    }
+  public async logOut() {
+    await Auth.signOut();
+    // try {
+    //   Auth.signOut()
+    //     .then(() => this._userSubject.next(null))
+    //     .catch((err: any) => {});
+    // } catch (err) {
+    //   //console.log("Logout failed", err);
+    // }
   }
 
   private async tryLoadUser() {
@@ -91,6 +99,7 @@ export class AuthService {
   }
 
   private getRole(user: any) {
+    console.log("User", user)
     const groups = (user as any).signInUserSession?.idToken?.payload?.['cognito:groups'];
     return (Array.isArray(groups) && groups.length > 0) ? `ROLE_${groups[0].toUpperCase()}` as any : null;
   }

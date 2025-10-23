@@ -4,18 +4,16 @@ import { Amplify } from 'aws-amplify';
 
 Amplify.configure({
   Auth: {
-    Cognito: {
-      userPoolId: 'eu-central-1_Z5AwbkW3r',
-      userPoolClientId: '5s262fjf6invnu51bqkpjkm5qs',
+      userPoolId: 'eu-central-1_bM93YJeMx',
+      userPoolWebClientId: '4l3h8plbgi0n0k9i4h9pqat1h1',
       region: 'eu-central-1',
       loginWith: {
         username: true,
         email: false
       },
       mandatorySignIn: false,
-    } as any
-  }
-}, { ssr: false });
+    }
+});
 
 platformBrowserDynamic().bootstrapModule(AppModule, {
   ngZoneEventCoalescing: true,
