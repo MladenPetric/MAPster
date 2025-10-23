@@ -29,23 +29,18 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - "*" # Dozvoljava POST metodu i Preflight OPTIONS metod
+        - "*" 
       allowedMethods:
         - "GET"
         - "POST"
-        - "OPTIONS" # Dozvoljava slanje Content-Type i Authorization headera (potrebno za JSON i JWT)
+        - "PUT"
+        - "DELETE"
+        - "OPTIONS" 
       allowedHeaders:
         - "Content-Type"
         - "Authorization"
-      maxAge: 600 # Opcionalno: Keširanje preflight odgovora na 10 minuta (600 sekundi)
+      maxAge: 600 
     authorizers:
-      # bouncer:
-      #     identitySource: $request.header.Authorization
-      #     issuerUrl:
-      #       Fn::sub: https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}
-      #     audience:
-      #       - !Ref CognitoUserPoolClientWeb
-      # Authorizer - ne dozvoljava pristup lambda funkcijama ako je access token validan!
       cognitoAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
@@ -133,7 +128,7 @@ resources:
           - AttributeName: albumId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-    #region Cognito
+
     MusicS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -162,6 +157,8 @@ resources:
           - AttributeName: musicId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
+    #region Cognito
 
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
