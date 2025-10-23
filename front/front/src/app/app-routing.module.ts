@@ -6,31 +6,32 @@ import { CreateArtistComponent } from './artist/create-artist/create-artist.comp
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { UploadMusicComponent } from './music/upload-music/upload-music.component';
+import { AlbumDetailsComponent } from './album/album-details/album-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'album/:albumId', component: AlbumDetailsComponent },
   {
     path: 'admin',
     component: HomeAdminComponent,
     data: { roles: ['ROLE_ADMIN'] },
     children: [
-      { path: 'create-artist', component: CreateArtistComponent }, 
-      { path: 'upload-music', component: UploadMusicComponent }, 
+      { path: 'create-artist', component: CreateArtistComponent },
+      { path: 'upload-music', component: UploadMusicComponent },
     ],
   },
   {
     path: 'user',
     component: HomeUserComponent,
     data: { roles: ['ROLE_USER'] },
-    children: [
-    ],
+    children: [],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

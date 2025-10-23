@@ -21,10 +21,15 @@
   <div *ngIf="!loading" class="albums section">
     <h2 class="section-title">Albums</h2>
     <div *ngIf="albums.length === 0" class="empty-msg">No albums found.</div>
-    <div *ngFor="let album of albums" class="card">
-      <h3 class="card-title">{{ album.name }}</h3>
-      <p class="card-sub">Genre: {{ album.genre }}</p>
-    </div>
+    <div
+    *ngFor="let album of albums"
+    class="card"
+    [routerLink]="['/album', album.albumId]"
+    style="cursor: pointer;"
+  >
+    <h3 class="card-title">{{ album.name }}</h3>
+    <p class="card-sub">Genre: {{ album.genre }}</p>
+  </div>
   </div>
 
   <!-- Umetnici -->

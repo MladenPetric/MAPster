@@ -17,6 +17,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { authInterceptor } from '../services/auth.interceptor';
+import { AlbumDetailsComponent } from './album/album-details/album-details.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { authInterceptor } from '../services/auth.interceptor';
     LoginComponent,
     RegisterComponent,
     NavBarComponent,
-    UploadMusicComponent
+    UploadMusicComponent,
+    AlbumDetailsComponent
   ],
   imports: [
     BrowserModule,
