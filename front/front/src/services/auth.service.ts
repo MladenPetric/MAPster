@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { User } from "../models/user.model";
 import { BehaviorSubject, map, Observable } from "rxjs";
-import { Auth } from 'aws-amplify/auth';
-import { Hub } from 'aws-amplify/utils';
+import { Hub, Auth } from "aws-amplify";
 
 
 @Injectable({
@@ -16,15 +15,12 @@ export class AuthService {
     return this._userSubject.value;
   }
 
-  public userRole$: Observable<'Admin' | 'User' | null> = this.user$.pipe(
-    map(user => {
-      if (!user) 
-        return null;
-
-      const groups = (user as any).signInUserSession?.idToken?.payload?.['cognito:groups'];
-      return (Array.isArray(groups) && groups.length > 0) ? groups[0] : null;
-    })
+  public userRole$ = this.user$.pipe(
+    map(user => this.getRole(user || {}))
   )
+  public get userRole() {
+    return this.getRole(this.user || {});
+  }
 
   public get accessToken() {
     return (this.user as any)?.signInUserSession?.accessToken?.jwtToken || null;
@@ -72,7 +68,7 @@ export class AuthService {
   public logOut() {
     Auth.signOut()
         .then(() => this._userSubject.next(null))
-        .catch((err: any) => console.log("Logout failed", err));
+        .catch(console.log.bind("Logout failed"));
   }
 
   private async tryLoadUser() {
@@ -82,6 +78,11 @@ export class AuthService {
     } catch {
       this._userSubject.next(null);
     }
+  }
+
+  private getRole(user: any) {
+    const groups = (user as any).signInUserSession?.idToken?.payload?.['cognito:groups'];
+    return (Array.isArray(groups) && groups.length > 0) ? `ROLE_${groups[0].toUpperCase()}` as any : null;
   }
 
 } 
