@@ -29,7 +29,11 @@ export class LoginComponent {
   }
 
   async onLogin() {
-    await this.auth.logIn(this.username, this.password);
+    try {
+      const user = await this.auth.logIn(this.username, this.password);
+    } catch (err: any) {
+      alert(err.message || err);
+    }
   }
 
 }
