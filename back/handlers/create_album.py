@@ -38,7 +38,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,
             'body': json.dumps({
-                'id': album_id, # Koristimo 'id' da bi se podudaralo sa Angular logikom
+                'albumId': album_id, # Koristimo 'id' da bi se podudaralo sa Angular logikom
                 'name': name,
                 'genre': genre
             })

@@ -6,7 +6,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetArtist } from '../../../models/get.artist.model';
 import { GetAlbum } from '../../../models/get.album.model';
 import { HttpEvent, HttpEventType, HttpProgressEvent } from '@angular/common/http';
-import { catchError, Observable, of, switchMap } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 
 
 
@@ -116,7 +116,7 @@ export class UploadMusicComponent {
   }
 
   submit() {
-    	const formValue = this.uploadForm.getRawValue();
+    const formValue = this.uploadForm.getRawValue();
 
 		// Privremeno omogućavamo onemogućene kontrole zbog validacije
 		this.uploadForm.get('album')?.enable({ emitEvent: false });
@@ -149,6 +149,7 @@ export class UploadMusicComponent {
 		this.isUploading = true;
 		const file = this.selectedFile;
 		
+    console.log("aaaaa")
 		// 1. Definišemo Observable koji će vratiti ID albuma (postojećeg ili novokreiranog)
 		const albumId$: Observable<string> = (newAlbumNameControlValue)
 			? this.albumService.createAlbum(
@@ -170,6 +171,7 @@ export class UploadMusicComponent {
 			// Ako se kreira novi album, ID je string; ako se bira postojeći, ID je ili ID string ili objekat sa .id
 			: of(albumControlValue?.id || albumControlValue || ''); 
 
+    console.log(albumId$)
 		// 2. Lančamo operaciju uploada nakon dobijanja ID-a albuma
 		albumId$.pipe(
 			switchMap(albumId => {
@@ -179,11 +181,13 @@ export class UploadMusicComponent {
 					return of(null as any); 
 				}
 
+        console.log("Dobijen albumId:", albumId);
 				// A. Poziv za dobijanje Presigned URL-a
 				return this.musicService.getPresignedUrl(file.name, file.type).pipe(
 					switchMap(response => {
 						const { uploadUrl, musicId } = response;
-
+            
+         
 						// B. Upload fajla na S3
 						return this.musicService.uploadFileToS3(uploadUrl, file).pipe(
 							switchMap(event => {
