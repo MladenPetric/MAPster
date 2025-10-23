@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlbumService {
-  private apiUrl = 'https://uii5ovbbv3.execute-api.eu-central-1.amazonaws.com/albums';
+  private apiUrl =
+    'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/albums';
 
   constructor(private http: HttpClient) {}
 

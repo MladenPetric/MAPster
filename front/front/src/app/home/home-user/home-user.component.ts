@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {
+  FilterService,
+  FilterResponse,
+} from '../../../services/filter.service';
 
 @Component({
   selector: 'app-home-user',
   standalone: false,
   templateUrl: './home-user.component.html',
-  styleUrl: './home-user.component.css',
+  styleUrls: ['./home-user.component.css'],
 })
-export class HomeUserComponent {
+export class HomeUserComponent implements OnInit {
   genres = [
     'Pop',
     'Rock',
@@ -19,35 +23,35 @@ export class HomeUserComponent {
     'Reggae',
     'Blues',
   ];
+
   selectedGenre = '';
+  albums: any[] = [];
+  artists: any[] = [];
+  loading = false;
 
-  albums = [
-    { title: 'Album 1', artist: 'Artist A', genre: 'Pop' },
-    { title: 'Album 2', artist: 'Artist B', genre: 'Rock' },
-    { title: 'Album 3', artist: 'Artist C', genre: 'Jazz' },
-    { title: 'Album 4', artist: 'Artist D', genre: 'Electronic' },
-    // dodaj više albuma
-  ];
+  constructor(private filterService: FilterService) {}
 
-  artists = [
-    { name: 'Artist A', genre: 'Pop' },
-    { name: 'Artist B', genre: 'Rock' },
-    { name: 'Artist C', genre: 'Jazz' },
-    { name: 'Artist D', genre: 'Electronic' },
-    // dodaj više umetnika
-  ];
-
-  get filteredAlbums() {
-    if (!this.selectedGenre) return this.albums;
-    return this.albums.filter((album) => album.genre === this.selectedGenre);
-  }
-
-  get filteredArtists() {
-    if (!this.selectedGenre) return this.artists;
-    return this.artists.filter((artist) => artist.genre === this.selectedGenre);
+  ngOnInit() {
+    this.loadData(); // učitavamo sve kad se stranica otvori
   }
 
   onGenreChange(event: any) {
     this.selectedGenre = event.target.value;
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading = true;
+    this.filterService.getFiltered(this.selectedGenre).subscribe({
+      next: (res: FilterResponse) => {
+        this.albums = res.albums || [];
+        this.artists = res.artists || [];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Greška prilikom učitavanja:', err);
+        this.loading = false;
+      },
+    });
   }
 }

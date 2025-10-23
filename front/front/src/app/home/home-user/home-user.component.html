@@ -3,30 +3,37 @@
   <!-- Filter sekcija -->
   <div class="filters">
     <label for="genreSelect" class="filter-label">Filter by Genre:</label>
-    <select id="genreSelect" [(ngModel)]="selectedGenre" (change)="onGenreChange($event)" class="filter-select">
+    <select
+      id="genreSelect"
+      [(ngModel)]="selectedGenre"
+      (change)="onGenreChange($event)"
+      class="filter-select"
+    >
       <option value="">All Genres</option>
       <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
     </select>
   </div>
 
+  <!-- Loading indikator -->
+  <div *ngIf="loading" class="loading">Loading data...</div>
+
   <!-- Albume -->
-  <div class="albums section">
+  <div *ngIf="!loading" class="albums section">
     <h2 class="section-title">Albums</h2>
-    <div *ngIf="filteredAlbums.length === 0" class="empty-msg">No albums found.</div>
-    <div *ngFor="let album of filteredAlbums" class="card">
-      <h3 class="card-title">{{ album.title }}</h3>
-      <p class="card-sub">Artist: {{ album.artist }}</p>
+    <div *ngIf="albums.length === 0" class="empty-msg">No albums found.</div>
+    <div *ngFor="let album of albums" class="card">
+      <h3 class="card-title">{{ album.name }}</h3>
       <p class="card-sub">Genre: {{ album.genre }}</p>
     </div>
   </div>
 
   <!-- Umetnici -->
-  <div class="artists section">
+  <div *ngIf="!loading" class="artists section">
     <h2 class="section-title">Artists</h2>
-    <div *ngIf="filteredArtists.length === 0" class="empty-msg">No artists found.</div>
-    <div *ngFor="let artist of filteredArtists" class="card">
+    <div *ngIf="artists.length === 0" class="empty-msg">No artists found.</div>
+    <div *ngFor="let artist of artists" class="card">
       <h3 class="card-title">{{ artist.name }}</h3>
-      <p class="card-sub">Genre: {{ artist.genre }}</p>
+      <p class="card-sub">Genre: {{ artist.genres?.join(', ') }}</p>
     </div>
   </div>
 

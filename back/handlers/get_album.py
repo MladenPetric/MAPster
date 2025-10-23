@@ -1,6 +1,6 @@
 import boto3
 import os
-
+import json
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['ALBUMS_TABLE'])
 
@@ -10,7 +10,7 @@ def lambda_handler(event, context):
         items = response.get('Items', [])
         return {
             "statusCode": 200,
-            "body": str(items)
+            "body": json.dumps(items)
         }
     except Exception as e:
         return {"statusCode": 500, "body": str(e)}
