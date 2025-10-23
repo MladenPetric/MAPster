@@ -96,7 +96,7 @@ export class AuthService {
       username, 
       password,
       attributes: Object.fromEntries(
-        Object.entries(request).filter(([key]) => ["given_name", "familiy_name", "birthdate", "email"].includes(key))
+        Object.entries(request).filter(([key]) => ["given_name", "family_name", "birthdate", "email"].includes(key))
       )
     });
   }
