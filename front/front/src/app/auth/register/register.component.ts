@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,14 +12,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
 
   constructor(private fb: FormBuilder) {
      this.registerForm = this.fb.group(
       {
         username: ['', Validators.required],
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
+        given_name: ['', Validators.required],
+        family_name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
@@ -29,7 +33,7 @@ export class RegisterComponent {
           ],
         ],
         repeatPassword: ['', Validators.required],
-        birthDate: ['', Validators.required],
+        birthdate: ['', Validators.required],
       },
       { validators: this.passwordsMatchValidator }
     );
@@ -42,7 +46,7 @@ export class RegisterComponent {
   }
 
 
-  onRegister() {
+  async onRegister() {
     if (this.registerForm.invalid) {
       if (this.registerForm.errors?.['passwordsMismatch']) {
         alert('Passwords do not match.');
@@ -50,6 +54,11 @@ export class RegisterComponent {
         alert('Please fill in all required fields correctly.');
       }
       return;
+    } else {
+      await this.auth.register(this.registerForm.value);
+      this.router.navigate(['/login']).then(() => {
+        alert('Successfully created an account');
+      });
     }
   }
 }
