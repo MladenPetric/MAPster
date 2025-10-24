@@ -11,8 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class MusicService {
-  private apiUrl =
-    'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/music';
+  private apiUrl = 'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/music';
 
   constructor(private http: HttpClient) {}
 
@@ -32,4 +31,9 @@ export class MusicService {
   saveMetadata(metadata: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/metadata`, metadata);
   }
+
+  getAllMusic(): Observable<any[]> {
+    return this.http.get<any[]>("https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/music/getAll");
+  }
+
 }

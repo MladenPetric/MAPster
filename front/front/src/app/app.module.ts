@@ -19,6 +19,8 @@ import {
 import { authInterceptor } from '../services/auth.interceptor';
 import { AlbumDetailsComponent } from './album/album-details/album-details.component';
 import { ArtistDetailsComponent } from './artist/artist-details/artist-details.component';
+import { ViewMusicComponent } from './music/view-music/view-music.component';
+import { NotificationsComponent } from './notifications/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,10 @@ import { ArtistDetailsComponent } from './artist/artist-details/artist-details.c
     NavBarComponent,
     UploadMusicComponent,
     AlbumDetailsComponent,
-    ArtistDetailsComponent
+    ArtistDetailsComponent,
+    UploadMusicComponent,
+    ViewMusicComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

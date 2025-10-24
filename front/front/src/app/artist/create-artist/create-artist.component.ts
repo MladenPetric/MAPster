@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators,} from '@angular/forms';
 import { ArtistService } from '../../../services/artist.service';
 import { Artist } from '../../../models/artist.model';
+import { NotificationService } from '../../../services/notification.serice';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-create-artist',
@@ -16,7 +18,7 @@ export class CreateArtistComponent {
     'Pop', 'Rock', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'R&B', 'Country', 'Reggae', 'Blues'
   ];
 
-  constructor(private fb: FormBuilder, private artistService: ArtistService) {
+  constructor(private fb: FormBuilder, private artistService: ArtistService, private notificationService: NotificationService, private authService: AuthService) {
 
       this.artistForm = this.fb.group({
       name: ['', Validators.required],
@@ -32,6 +34,22 @@ export class CreateArtistComponent {
       this.artistService.createArtist(artist).subscribe({
         next: (res) => {
           alert('Artist successfully created!');
+
+          const userId = this.authService.user?.sub // trenutno ulogovani korisnik
+          if (userId && artist.genres?.length) {
+            artist.genres.forEach((genre: string) => {
+              this.notificationService.createNotification(
+                userId,
+                'artistAdd',
+                genre
+              ).subscribe({
+                next: () => console.log(`Notification created for genre: ${genre}`),
+                error: (err) => console.error('Error creating notification:', err)
+              });
+            });
+          }
+
+
           this.artistForm.reset();
         },
         error: (err) => {

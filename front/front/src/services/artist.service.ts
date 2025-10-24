@@ -7,8 +7,7 @@ import { Artist } from '../models/artist.model';
   providedIn: 'root',
 })
 export class ArtistService {
-  private apiUrl =
-    'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/artists';
+  private apiUrl = 'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/artists';
 
   constructor(private http: HttpClient) {}
 

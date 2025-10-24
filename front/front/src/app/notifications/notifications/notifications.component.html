@@ -1,0 +1,17 @@
+<div class="notification-container" *ngIf="notifications.length; else noNotifications">
+  <div
+    *ngFor="let notif of notifications"
+    class="notification-card"
+    [class.unread]="!notif.read"
+    (click)="markAsRead(notif)"
+  >
+    <h3>Notification</h3>
+    <p>{{ notif.message }}</p>
+    <small *ngIf="notif.read">✓ Read</small>
+    <small *ngIf="!notif.read" class="unread-text">Unread</small>
+  </div>
+</div>
+
+<ng-template #noNotifications>
+  <div class="no-notifications">No notifications yet 📭</div>
+</ng-template>

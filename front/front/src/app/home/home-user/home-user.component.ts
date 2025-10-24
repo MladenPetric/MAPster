@@ -3,6 +3,8 @@ import {
   FilterService,
   FilterResponse,
 } from '../../../services/filter.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-home-user',
@@ -28,11 +30,23 @@ export class HomeUserComponent implements OnInit {
   albums: any[] = [];
   artists: any[] = [];
   loading = false;
+  showChildContent = false;
 
-  constructor(private filterService: FilterService) {}
+  constructor(private filterService: FilterService, private router: Router) {}
 
   ngOnInit() {
     this.loadData(); // učitavamo sve kad se stranica otvori
+
+     this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        // Ako ruta sadrži 'view-music' ili 'notifications', prikaži child content
+        if (event.url.includes('/user/view-music') || event.url.includes('/user/notifications')) {
+          this.showChildContent = true;
+        } else {
+          this.showChildContent = false;
+        }
+      });
   }
 
   onGenreChange(event: any) {
