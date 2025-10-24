@@ -1,0 +1,65 @@
+.album-details {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #f9fafb;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.album-details h2 {
+  font-size: 28px;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.album-details h3 {
+  font-size: 22px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.album-details h4 {
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.loading {
+  font-size: 16px;
+  color: #555;
+  margin: 20px 0;
+}
+
+.empty-msg {
+  color: #999;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+li span {
+  color: #666;
+}

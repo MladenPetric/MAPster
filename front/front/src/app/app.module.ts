@@ -17,6 +17,8 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { authInterceptor } from '../services/auth.interceptor';
+import { AlbumDetailsComponent } from './album/album-details/album-details.component';
+import { ArtistDetailsComponent } from './artist/artist-details/artist-details.component';
 import { ViewMusicComponent } from './music/view-music/view-music.component';
 import { NotificationsComponent } from './notifications/notifications/notifications.component';
 
@@ -29,6 +31,9 @@ import { NotificationsComponent } from './notifications/notifications/notificati
     LoginComponent,
     RegisterComponent,
     NavBarComponent,
+    UploadMusicComponent,
+    AlbumDetailsComponent,
+    ArtistDetailsComponent,
     UploadMusicComponent,
     ViewMusicComponent,
     NotificationsComponent

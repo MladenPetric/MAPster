@@ -1,0 +1,33 @@
+<div class="artist-details">
+  <h2>Artist Details</h2>
+
+  <h3 *ngIf="artistName">{{ artistName }}</h3>
+
+  <div *ngIf="artistGenres.length > 0" class="genres">
+    <h4>Genres:</h4>
+    <ul>
+      <li *ngFor="let genre of artistGenres">{{ genre }}</li>
+    </ul>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading artist info...</div>
+
+  <div *ngIf="!loading && !artistName" class="empty-msg">
+    Artist not found.
+  </div>
+
+  <div *ngIf="!loading" class="songs">
+    <h4>Songs:</h4>
+
+    <div *ngIf="songs.length === 0" class="empty-msg">
+      No songs found for this artist.
+    </div>
+
+    <ul *ngIf="songs.length > 0">
+      <li *ngFor="let song of songs">
+        {{ song.title }}
+      </li>
+    </ul>
+  </div>
+  <button   (click)="subscribeOnArtist()" class="extra-btn">Subscribe on genres</button>
+</div>

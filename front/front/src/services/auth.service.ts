@@ -58,24 +58,13 @@ export class AuthService {
 
 
   public async logIn(username: string, password: string) {
-    const user = await Auth.signIn(username, password);
-    await Auth.completeNewPassword(user, password);
-
-    // try {
-    //   Auth.signIn(username, password)
-    //     .then(async (user) => {
-    //       if (user.challengeName == 'NEW_PASSWORD_REQUIRED') {
-    //         await Auth.completeNewPassword(username, password);
-    //       }
-    //       this._userSubject.next(user);
-    //     })
-    //     .catch((err: any) => {
-    //       //console.log("Login failed", err);
-    //       this._userSubject.next(null);
-    //     });
-    // } catch (error) {
-    //   //console.error('Login failed', error);
-    // } 
+    try {
+      const user = await Auth.signIn(username, password);
+      this._userSubject.next(user as User);
+    }  catch (error) {
+      //console.error("")
+      throw error;
+    }
   }
 
   public async logOut() {
@@ -90,15 +79,23 @@ export class AuthService {
   }
 
   public async register(request: any) {
-    const { username, password } = request;
+    try {
+      const { email: username, password } = request;
 
-    const { user } = await Auth.signUp({
-      username, 
-      password,
-      attributes: Object.fromEntries(
-        Object.entries(request).filter(([key]) => ["given_name", "family_name", "birthdate", "email"].includes(key))
-      )
-    });
+      const { user } = await Auth.signUp({
+        username, 
+        password,
+        attributes: Object.fromEntries(
+          Object.entries(request).filter(([key]) => ["given_name", "family_name", "birthdate", "email"].includes(key))
+        )
+      });
+
+      console.info("Successfully registered user", username);
+      //return user;
+    } catch (error) {
+      console.error("Registration failed", error);
+      throw error;
+    }
   }
 
   private async tryLoadUser() {
