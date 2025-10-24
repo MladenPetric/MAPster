@@ -15,6 +15,8 @@ provider:
     MUSIC_FILES_TABLE: ${self:service}-music-files
     MUSIC_META_TABLE: ${self:service}-music-meta
     ALBUMS_TABLE: ${self:service}-albums
+    SUBSCRIPTIONS_TABLE: ${self:service}-subscriptions
+    NOTIFICATIONS_TABLE: ${self:service}-notifications
   iam:
     role:
       statements:
@@ -31,6 +33,8 @@ provider:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-files"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums/index/albumId-index"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-subscriptions"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-notifications"
             # - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta/index/albumId-index"
 
         - Effect: "Allow"
@@ -212,7 +216,7 @@ functions:
     handler: handlers.get_user_notifications.lambda_handler
     events:
       - httpApi:
-          path: /getUserNotifications
+          path: /getUserNotifications/{userId}
           method: get
           cors: true
     

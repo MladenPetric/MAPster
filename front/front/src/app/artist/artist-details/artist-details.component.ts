@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ArtistService } from '../../../services/artist.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { NotificationService } from '../../../services/notification.serice';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-artist-details',
@@ -19,7 +21,8 @@ export class ArtistDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private artistService: ArtistService,
-    private authService: AuthService //private notificationService: NotificationService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -50,12 +53,19 @@ export class ArtistDetailsComponent {
     });
   }
   subscribeOnArtist(): void {
-    const userId = this.authService.user?.sub;
-    if (!userId || !this.artistId) return;
 
-    // this.notificationService.subscribeUser(userId, 'artist', artistId).subscribe({
-    //   next: () => console.log(Subscribed to artist: ${artistId}),
-    //   error: (err) => console.error(Error subscribing to artist ${artistId}:, err)
-    // });
+    this.authService.user$.pipe(
+          filter(u => !!u)).subscribe(
+              user => {
+                const userId = user.username
+                if (!userId || !this.artistId) return;
+                  console.log(userId)
+                    console.log(this.artistId)
+                  this.notificationService.subscribeUser(userId, 'artist', this.artistId).subscribe({
+                  next: () => console.log(`Subscribed to artist: ${this.artistId}`),
+                  error: (err) => console.error(`Error subscribing to artist ${this.artistId}:`, err)
+                });
+              }
+          )
   }
 }

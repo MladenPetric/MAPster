@@ -1,3 +1,4 @@
+from xml.dom.minidom import Attr
 import boto3
 import json
 import os
@@ -9,14 +10,12 @@ def lambda_handler(event, context):
     try:
         user_id = event['pathParameters']['userId']
 
-        response = notifications_table.query(
-            KeyConditionExpression="userId = :uid",
-            ExpressionAttributeValues={":uid": user_id}
+        response = notifications_table.scan(
+            FilterExpression=Attr('userId').eq(user_id)
         )
 
         return {
             "statusCode": 200,
-            "headers": {"Access-Control-Allow-Origin": "*"},
             "body": json.dumps(response.get('Items', []))
         }
 

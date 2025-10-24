@@ -4,6 +4,7 @@ import { ArtistService } from '../../../services/artist.service';
 import { Artist } from '../../../models/artist.model';
 import { NotificationService } from '../../../services/notification.serice';
 import { AuthService } from '../../../services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-create-artist',
@@ -35,21 +36,20 @@ export class CreateArtistComponent {
         next: (res) => {
           alert('Artist successfully created!');
 
-          const userId = this.authService.user?.sub // trenutno ulogovani korisnik
-          if (userId && artist.genres?.length) {
-            artist.genres.forEach((genre: string) => {
-              this.notificationService.createNotification(
-                userId,
-                'artistAdd',
-                genre
-              ).subscribe({
-                next: () => console.log(`Notification created for genre: ${genre}`),
-                error: (err) => console.error('Error creating notification:', err)
-              });
-            });
-          }
-
-
+          this.authService.user$.pipe(
+            filter(u => !!u)).subscribe(
+             user => {
+              const userId = user.username
+                if (userId && artist.genres?.length) {
+                  artist.genres.forEach((genre: string) => {
+                    this.notificationService.createNotification(userId, 'artistAdd', genre).subscribe({
+                      next: () => console.log(`Notification created for genre: ${genre}`),
+                      error: (err) => console.error('Error creating notification:', err)
+                    });
+                  });
+                }
+              }
+            )    
           this.artistForm.reset();
         },
         error: (err) => {

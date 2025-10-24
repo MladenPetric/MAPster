@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NotificationService } from '../../../services/notification.serice';
 import { AuthService } from '../../../services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
@@ -15,10 +16,15 @@ export class NotificationsComponent {
   constructor(private notificationService: NotificationService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userId = this.authService.user?.sub
-    if (this.userId) {
-      this.loadNotifications();
-    }
+    this.authService.user$.pipe(
+      filter(u => !!u)).subscribe(
+        user => {
+          this.userId = user.username
+          if (this.userId) {
+            this.loadNotifications();
+          }
+        }
+      ) 
   }
 
   loadNotifications(): void {

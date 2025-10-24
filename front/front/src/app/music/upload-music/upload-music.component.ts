@@ -6,7 +6,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GetArtist } from '../../../models/get.artist.model';
 import { GetAlbum } from '../../../models/get.album.model';
 import { HttpEvent, HttpEventType, HttpProgressEvent } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, filter, Observable, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.serice';
 
@@ -242,35 +242,31 @@ export class UploadMusicComponent {
 					this.uploadProgress = 0;
 				}
 
+        
+        // this.authService.user$.pipe(
+        // filter(u => !!u)).subscribe(
+        //     user => {
+        //       const userId = user.username
+        //       if (userId) {
+                      
+        //         this.notificationService.createNotification(userId, 'artistSongAdd', formValue.artist).subscribe({
+        //           next: () => console.log('Notification created: artistSongAdd'),
+        //           error: err => console.error('Error creating artistSongAdd notification:', err)
+        //         });
 
-        const userId = this.authService.user?.sub
-        if (userId) {
-          // 1️⃣ Za umetnika
-          this.notificationService.createNotification(
-            userId,
-            'artistSongAdd',
-            formValue.artist
-          ).subscribe({
-            next: () => console.log('Notification created: artistSongAdd'),
-            error: err => console.error('Error creating artistSongAdd notification:', err)
-          });
-
-          // 2️⃣ Za žanrove
-          if (formValue.genre?.length) {
-            formValue.genre.forEach((g: string) => {
-              this.notificationService.createNotification(
-                userId,
-                'songAdd',
-                g
-              ).subscribe({
-                next: () => console.log(`Notification created: songAdd (${g})`),
-                error: err => console.error('Error creating songAdd notification:', err)
-              });
-            });
-          }
-        }
-
-
+        //                 // 2️⃣ Za žanrove
+        //         if (formValue.genre?.length) {
+        //           formValue.genre.forEach((g: string) => {
+        //           this.notificationService.createNotification(userId, 'songAdd', g
+        //           ).subscribe({
+        //             next: () => console.log(`Notification created: songAdd (${g})`),
+        //             error: err => console.error('Error creating songAdd notification:', err)
+        //           });
+        //         });
+        //       }
+        //     }
+        //   }
+        // )
 			},
 			error: (err) => {
 				console.error("Konačna greška nakon svih pokušaja:", err);

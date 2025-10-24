@@ -19,7 +19,7 @@ export class NotificationService {
    * @param target - ID umetnika ili naziv žanra
    */
   subscribeUser(userId: string, type: string, target: string): Observable<any> {
-    const body = { userId, type, target };
+    const body = { userId, type, targetId: target };
     return this.http.post(`${this.apiUrl}/subscribe`, body);
   }
 
@@ -30,7 +30,7 @@ export class NotificationService {
    * @param target - ID umetnika, naziv žanra ili drugi parametar
    */
   createNotification(userId: string, type: string, target: string): Observable<any> {
-    const body = { userId, type, target };
+    const body = { userId, type, targetId: target };
     return this.http.post(`${this.apiUrl}/notify`, body);
   }
 

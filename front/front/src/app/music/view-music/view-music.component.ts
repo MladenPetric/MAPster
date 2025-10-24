@@ -3,6 +3,7 @@ import { MusicService } from '../../../services/music.service';
 import { immediateProvider } from 'rxjs/internal/scheduler/immediateProvider';
 import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.serice';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-view-music',
@@ -78,22 +79,31 @@ export class ViewMusicComponent implements OnInit, OnDestroy {
   }
 
   subscribeOnGenres(music: any): void {
-    const userId = this.auth.user?.sub
-    if (!userId) return;
-    console.log(userId)
-    console.log(music.genre)
-    if (music.genre && music.genre.length) {
-    
-      const genres = music.genre.filter((g: any) => g);
 
-      genres.forEach((genre: string) => {
-        this.notificationsService.subscribeUser(userId, 'genre', genre).subscribe({
-          next: () => console.log(`Subscribed to genre: ${genre}`),
-          error: (err) => console.error(`Error subscribing to genre ${genre}:`, err)
-        });
-      });
-    } else {
-      console.log('No genres to subscribe to.');
-    }
+    this.auth.user$.pipe(
+      filter(u => !!u)).subscribe(
+          user => {
+            const userId = user.username
+            if (!userId) return;      
+            if (music.genre && music.genre.length) {
+            
+              const genres = music.genre.filter((g: any) => g);
+
+              genres.forEach((genre: string) => {
+                console.log(genre)
+                console.log(userId)
+                this.notificationsService.subscribeUser(userId, 'genre', genre).subscribe({
+                  next: () => console.log(`Subscribed to genre: ${genre}`),
+                  error: (err) => console.error(`Error subscribing to genre ${genre}:`, err)
+                });
+              });
+            } else {
+              console.log('No genres to subscribe to.');
+            }
+          }
+      )
+
+      
+    
     }
 } 
