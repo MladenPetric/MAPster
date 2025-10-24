@@ -20,8 +20,11 @@ def preSignUp(event, context):
 
         if existing_users['Users']:
             logger.info("Email already exists")
-
-        event['response']['autoConfirmUser'] = True
+            raise Exception("Email already exists")
+    
+    event['response']['autoConfirmUser'] = True
+    event['response']['autoVerifyEmail'] = True
+    event['response']['autoVerifyPhone'] = True
 
     return event
 
