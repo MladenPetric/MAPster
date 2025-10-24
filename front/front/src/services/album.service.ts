@@ -32,7 +32,7 @@ export class AlbumService {
 
   getSongsByAlbum(albumId: string): Observable<any[]> {
     return this.http.get<any[]>(
-      `https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/songs/${albumId}`
+      `https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/songs/album/${albumId}`
     );
   }
 }

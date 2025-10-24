@@ -36,7 +36,7 @@
   <div *ngIf="!loading" class="artists section">
     <h2 class="section-title">Artists</h2>
     <div *ngIf="artists.length === 0" class="empty-msg">No artists found.</div>
-    <div *ngFor="let artist of artists" class="card">
+    <div *ngFor="let artist of artists" class="card" [routerLink]="['/artist', artist.artistId]">
       <h3 class="card-title">{{ artist.name }}</h3>
       <p class="card-sub">Genre: {{ artist.genres?.join(', ') }}</p>
     </div>

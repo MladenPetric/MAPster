@@ -18,6 +18,7 @@ import {
 } from '@angular/common/http';
 import { authInterceptor } from '../services/auth.interceptor';
 import { AlbumDetailsComponent } from './album/album-details/album-details.component';
+import { ArtistDetailsComponent } from './artist/artist-details/artist-details.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AlbumDetailsComponent } from './album/album-details/album-details.compo
     RegisterComponent,
     NavBarComponent,
     UploadMusicComponent,
-    AlbumDetailsComponent
+    AlbumDetailsComponent,
+    ArtistDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -103,7 +103,16 @@ functions:
     handler: handlers.get_songs_by_album.lambda_handler
     events:
       - httpApi:
-          path: /songs/{albumId}
+          path: /songs/album/{albumId}
+          method: get
+    environment:
+      MUSIC_META_TABLE: !Ref MusicMetaDynamoDBTable
+
+  getSongsByArtist:
+    handler: handlers.get_songs_by_artist.lambda_handler
+    events:
+      - httpApi:
+          path: /songs/artist/{artistId}
           method: get
     environment:
       MUSIC_META_TABLE: !Ref MusicMetaDynamoDBTable
@@ -117,6 +126,16 @@ functions:
           cors: true
     environment:
       ALBUMS_TABLE: !Ref AlbumsDynamoDBTable
+
+  getArtistById:
+    handler: handlers.get_artist_by_id.lambda_handler
+    events:
+      - httpApi:
+          path: /artists/{artistId}
+          method: get
+          cors: true
+    environment:
+      ARTISTS_TABLE: !Ref ArtistsDynamoDBTable
 
   getArtists:
     handler: handlers.get_artists.lambda_handler
@@ -310,33 +329,5 @@ resources:
           - ALLOW_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
         PreventUserExistenceErrors: ENABLED
-
-    #endregion
-    #region Website hosting
-
-    WebHostingBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:service}-website-bucket
-        WebsiteConfiguration:
-          IndexDocument: index.html
-          ErrorDocument: index.html
-        PublicAccessBlockConfiguration:
-          BlockPublicAcls: false
-          BlockPublicPolicy: false
-          IgnorePublicAcls: false
-          RestrictPublicBuckets: false
-
-    WebHostingBucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: !Ref WebHostingBucket
-        PolicyDocument:
-          Statement:
-            - Effect: Allow
-              Principal: "*"
-              Action: s3:GetObject
-              Resource:
-                !Join ["", ["arn:aws:s3:::", !Ref WebHostingBucket, "/*"]]
 
     #endregion
