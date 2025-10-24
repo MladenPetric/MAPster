@@ -1,5 +1,5 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-# org: petardragicevic
+org: petardragicevic
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: app
 # "service" is the name of this project. This will also be added to your AWS resource names.
@@ -9,6 +9,7 @@ provider:
   name: aws
   runtime: python3.12
   region: eu-central-1
+  profile: default
   environment:
     ARTISTS_TABLE: ${self:service}-artists
     MUSIC_BUCKET: ${self:service}-music-bucket

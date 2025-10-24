@@ -1,4 +1,4 @@
-from xml.dom.minidom import Attr
+from boto3.dynamodb.conditions import Attr  
 import boto3
 import json
 import os
