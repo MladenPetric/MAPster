@@ -7,7 +7,8 @@ import { Artist } from '../models/artist.model';
   providedIn: 'root',
 })
 export class ArtistService {
-  private apiUrl = 'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/artists';
+  private apiUrl =
+    'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/artists';
 
   constructor(private http: HttpClient) {}
 
@@ -17,5 +18,15 @@ export class ArtistService {
 
   getArtists(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+
+  getArtistById(artistId: string): Observable<Artist> {
+    return this.http.get<Artist>(`${this.apiUrl}/${artistId}`);
+  }
+
+  getSongsByArtist(artistId: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/songs/artist/${artistId}`
+    );
   }
 }

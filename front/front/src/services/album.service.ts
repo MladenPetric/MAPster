@@ -7,7 +7,8 @@ import { GetAlbum } from '../models/get.album.model';
   providedIn: 'root',
 })
 export class AlbumService {
-  private apiUrl = 'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/albums';
+  private apiUrl =
+    ' https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/albums';
 
   constructor(private http: HttpClient) {}
 
@@ -21,5 +22,17 @@ export class AlbumService {
       genre: genre,
     };
     return this.http.post<GetAlbum>(this.apiUrl, payload);
+  }
+
+  getAlbumById(albumId: string): Observable<any> {
+    return this.http.get<any>(
+      `https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/albums/${albumId}`
+    );
+  }
+
+  getSongsByAlbum(albumId: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/songs/album/${albumId}`
+    );
   }
 }

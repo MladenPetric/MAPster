@@ -24,16 +24,19 @@ provider:
             - "dynamodb:Scan"
             - "dynamodb:GetItem"
             - "dynamodb:Query"
+            - "dynamodb:UpdateItem"
           Resource:
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-files"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums/index/albumId-index"
+            # - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta/index/albumId-index"
 
         - Effect: "Allow"
           Action:
-             - "s3:PutObject" 
-             - "s3:PutObjectAcl" 
+            - "s3:PutObject"
+            - "s3:PutObjectAcl"
           Resource:
             Fn::Join:
               - ""
@@ -95,6 +98,45 @@ functions:
             parameters:
               querystrings:
                 genre: true
+
+  getSongsByAlbum:
+    handler: handlers.get_songs_by_album.lambda_handler
+    events:
+      - httpApi:
+          path: /songs/album/{albumId}
+          method: get
+    environment:
+      MUSIC_META_TABLE: !Ref MusicMetaDynamoDBTable
+
+  getSongsByArtist:
+    handler: handlers.get_songs_by_artist.lambda_handler
+    events:
+      - httpApi:
+          path: /songs/artist/{artistId}
+          method: get
+    environment:
+      MUSIC_META_TABLE: !Ref MusicMetaDynamoDBTable
+
+  get_album_by_id:
+    handler: handlers.get_album_by_id.lambda_handler
+    events:
+      - httpApi:
+          path: /albums/{albumId}
+          method: get
+          cors: true
+    environment:
+      ALBUMS_TABLE: !Ref AlbumsDynamoDBTable
+
+  getArtistById:
+    handler: handlers.get_artist_by_id.lambda_handler
+    events:
+      - httpApi:
+          path: /artists/{artistId}
+          method: get
+          cors: true
+    environment:
+      ARTISTS_TABLE: !Ref ArtistsDynamoDBTable
+
   getArtists:
     handler: handlers.get_artists.lambda_handler
     events:
@@ -108,7 +150,6 @@ functions:
       - httpApi:
           path: /albums
           method: get
-
 
   uploadMusic:
     handler: handlers/upload_music.lambda_handler
@@ -132,7 +173,6 @@ functions:
       - httpApi:
           path: /albums
           method: post
-
 
 resources:
   Resources:
@@ -163,7 +203,13 @@ resources:
           - AttributeName: albumId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-
+        GlobalSecondaryIndexes:
+          - IndexName: albumId-index
+            KeySchema:
+              - AttributeName: albumId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
 
     MusicS3Bucket:
       Type: AWS::S3::Bucket
@@ -172,15 +218,14 @@ resources:
         CorsConfiguration:
           CorsRules:
             - AllowedHeaders:
-                 - '*'
+                - "*"
               AllowedMethods:
                 - PUT # KRITIČNO: Dozvoljavamo PUT za upload fajla
                 - GET
                 - POST
               AllowedOrigins:
-               - '*' # Dozvolite pristup sa svih domena
+                - "*" # Dozvolite pristup sa svih domena
               MaxAge: 3000
-
 
     MusicFilesDynamoDBTable:
       Type: AWS::DynamoDB::Table
@@ -201,11 +246,21 @@ resources:
         AttributeDefinitions:
           - AttributeName: musicId
             AttributeType: S
+          # - AttributeName: albumId
+          #   AttributeType: S
         KeySchema:
+          # - AttributeName: albumId
+          #   KeyType: HASH
           - AttributeName: musicId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-
+        # GlobalSecondaryIndexes:
+        #   - IndexName: album-index
+        #     KeySchema:
+        #       - AttributeName: album
+        #         KeyType: HASH
+        #     Projection:
+        #       ProjectionType: ALL
     #region Cognito
 
     CognitoUserPool:

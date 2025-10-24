@@ -1,0 +1,17 @@
+<div class="album-details">
+  <h2>Album Details</h2>
+
+  <h3 *ngIf="albumName">{{ albumName }}</h3>
+    <h4 *ngIf="albumGenre">{{ albumGenre }}</h4>
+  <div *ngIf="loading">Loading songs...</div>
+
+  <div *ngIf="!loading && songs.length === 0" class="empty-msg">
+    No songs found for this album.
+  </div>
+
+  <ul *ngIf="!loading && songs.length > 0">
+    <li *ngFor="let song of songs">
+      {{ song.title }} 
+    </li>
+  </ul>
+</div>

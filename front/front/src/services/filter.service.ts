@@ -15,7 +15,7 @@ export interface FilterResponse {
 })
 export class FilterService {
   private apiUrl =
-    'https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com/filter';
+    'https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com/filter';
 
   constructor(private http: HttpClient) {}
 
