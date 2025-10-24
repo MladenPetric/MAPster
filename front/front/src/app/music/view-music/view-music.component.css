@@ -1,0 +1,78 @@
+.music-list-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.music-card {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  transition: transform 0.2s ease;
+}
+
+.music-card:hover {
+  transform: scale(1.02);
+}
+
+.music-cover {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.music-info {
+  flex: 1;
+}
+
+.music-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.music-info .genres {
+  color: #666;
+  font-size: 14px;
+}
+
+.music-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.music-actions button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.music-actions button:hover {
+  background-color: #0056b3;
+}
+
+.extra-btn {
+  background-color: #6c757d;
+}
+
+.extra-btn:hover {
+  background-color: #565e64;
+}
+
+.no-music {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+  margin-top: 40px;
+}

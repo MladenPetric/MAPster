@@ -8,9 +8,12 @@
     <ng-container *ngIf="userRole === 'ROLE_ADMIN'">
       <a routerLink="/admin/create-artist" class="nav-link">Create artist</a>
       <a routerLink="/admin/upload-music" class="nav-link">Upload music</a>
+      <a routerLink="/admin/view-music" class="nav-link">Music content</a>
     </ng-container>
 
     <ng-container *ngIf="userRole === 'ROLE_USER'">
+      <a routerLink="/user/view-music" class="nav-link">Music content</a>
+      <a routerLink="/user/notifications" class="nav-link">Notifications</a>
     </ng-container>
   </div>
 

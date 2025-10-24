@@ -34,12 +34,21 @@ provider:
           Action:
              - "s3:PutObject" 
              - "s3:PutObjectAcl" 
+             - "s3:GetObject"
           Resource:
             Fn::Join:
               - ""
               - - "arn:aws:s3:::"
                 - "${self:service}-music-bucket"
                 - "/*"
+                
+        - Effect: "Allow"
+          Action:
+            - "cognito-idp:AdminAddUserToGroup"
+            - "cognito-idp:ListUsers" 
+          Resource:
+            - !GetAtt CognitoUserPool.Arn 
+          
   httpApi:
     cors:
       allowedOrigins:
@@ -65,14 +74,14 @@ provider:
 
 functions:
   preRegistration:
-    handler: handlers/auth.preSignUp
+    handler: handlers.auth.preSignUp
     events:
       - cognitoUserPool:
           pool: MapsterUserPool
           trigger: PreSignUp
 
   postConfirmation:
-    handler: handlers/auth.postConfirmation
+    handler: handlers.auth.postConfirmation
     events:
       - cognitoUserPool:
           pool: MapsterUserPool
@@ -133,7 +142,39 @@ functions:
           path: /albums
           method: post
 
+  getAllMusic:
+    handler: handlers.get_music.lambda_handler
+    events:
+      - httpApi:
+          path: /music/getAll
+          method: get
+          cors: true
 
+  subscribeUser:
+    handler: handlers.subscribe_user.lambda_handler
+    events:
+      - httpApi:
+          path: /subscribe
+          method: post
+          cors: true
+    
+
+  createNotification:
+    handler: handlers.create_notifications.lambda_handler
+    events:
+      - httpApi:
+          path: /notify
+          method: post
+          cors: true
+
+  getUserNotifications:
+    handler: handlers.get_user_notifications.lambda_handler
+    events:
+      - httpApi:
+          path: /getUserNotifications
+          method: get
+          cors: true
+    
 resources:
   Resources:
     ArtistsDynamoDBTable:
@@ -206,6 +247,41 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
+ 
+    SubscriptionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-subscriptions
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: targetId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: targetId
+            KeyType: RANGE
+
+    NotificationsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-notifications
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: notificationId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: notificationId
+            KeyType: RANGE
+
+
+
     #region Cognito
 
     CognitoUserPool:
@@ -213,7 +289,7 @@ resources:
       Properties:
         UserPoolName: MapsterUserPool
         UsernameAttributes: [email]
-        AutoVerifiedAttributes: [email]
+        AutoVerifiedAttributes: []
         #        SelfSignUpEnabled: true
         #        AccountRecoverySetting:
         #          RecoveryMechanisms: []

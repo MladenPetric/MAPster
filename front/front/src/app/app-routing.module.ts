@@ -6,6 +6,8 @@ import { CreateArtistComponent } from './artist/create-artist/create-artist.comp
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { UploadMusicComponent } from './music/upload-music/upload-music.component';
+import { ViewMusicComponent } from './music/view-music/view-music.component';
+import { NotificationsComponent } from './notifications/notifications/notifications.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,6 +20,7 @@ const routes: Routes = [
     children: [
       { path: 'create-artist', component: CreateArtistComponent }, 
       { path: 'upload-music', component: UploadMusicComponent }, 
+      { path: 'view-music', component: ViewMusicComponent }, 
     ],
   },
   {
@@ -25,6 +28,8 @@ const routes: Routes = [
     component: HomeUserComponent,
     data: { roles: ['ROLE_USER'] },
     children: [
+      { path: 'view-music', component: ViewMusicComponent }, 
+      { path: 'notifications', component: NotificationsComponent }, 
     ],
   },
 ];

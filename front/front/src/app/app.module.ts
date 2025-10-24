@@ -17,6 +17,8 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { authInterceptor } from '../services/auth.interceptor';
+import { ViewMusicComponent } from './music/view-music/view-music.component';
+import { NotificationsComponent } from './notifications/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { authInterceptor } from '../services/auth.interceptor';
     LoginComponent,
     RegisterComponent,
     NavBarComponent,
-    UploadMusicComponent
+    UploadMusicComponent,
+    ViewMusicComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

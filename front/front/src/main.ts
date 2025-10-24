@@ -4,8 +4,8 @@ import { Amplify } from 'aws-amplify';
 
 Amplify.configure({
   Auth: {
-      userPoolId: 'eu-central-1_bM93YJeMx',
-      userPoolWebClientId: '4l3h8plbgi0n0k9i4h9pqat1h1',
+      userPoolId: 'eu-central-1_4yvgRzhnF',
+      userPoolWebClientId: '7425ha9oivce0vc386n284rm0p',
       region: 'eu-central-1',
       loginWith: {
         username: true,

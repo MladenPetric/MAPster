@@ -59,7 +59,7 @@ export class AuthService {
 
   public async logIn(username: string, password: string) {
     const user = await Auth.signIn(username, password);
-    //await Auth.completeNewPassword(user, password);
+    await Auth.completeNewPassword(user, password);
 
     // try {
     //   Auth.signIn(username, password)

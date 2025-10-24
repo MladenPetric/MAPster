@@ -1,4 +1,4 @@
-<div class="home-user-container">
+<div *ngIf="!showChildContent"  class="home-user-container">
 
   <!-- Filter sekcija -->
   <div class="filters">
@@ -37,4 +37,10 @@
     </div>
   </div>
 
+</div>
+
+
+
+<div *ngIf="showChildContent" class="user-container">
+  <router-outlet></router-outlet>
 </div>

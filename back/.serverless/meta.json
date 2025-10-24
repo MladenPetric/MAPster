@@ -39,7 +39,8 @@
                 "Effect": "Allow",
                 "Action": [
                   "s3:PutObject",
-                  "s3:PutObjectAcl"
+                  "s3:PutObjectAcl",
+                  "s3:GetObject"
                 ],
                 "Resource": {
                   "Fn::Join": [
@@ -51,6 +52,21 @@
                     ]
                   ]
                 }
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "cognito-idp:AdminAddUserToGroup",
+                  "cognito-idp:ListUsers"
+                ],
+                "Resource": [
+                  {
+                    "Fn::GetAtt": [
+                      "CognitoUserPool",
+                      "Arn"
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -149,6 +165,30 @@
                 "LogGroupName": "/aws/lambda/back-dev-createAlbum"
               }
             },
+            "GetAllMusicLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/back-dev-getAllMusic"
+              }
+            },
+            "SubscribeUserLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/back-dev-subscribeUser"
+              }
+            },
+            "CreateNotificationLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/back-dev-createNotification"
+              }
+            },
+            "GetUserNotificationsLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/back-dev-getUserNotifications"
+              }
+            },
             "IamRoleLambdaExecution": {
               "Type": "AWS::IAM::Role",
               "Properties": {
@@ -226,7 +266,8 @@
                           "Effect": "Allow",
                           "Action": [
                             "s3:PutObject",
-                            "s3:PutObjectAcl"
+                            "s3:PutObjectAcl",
+                            "s3:GetObject"
                           ],
                           "Resource": {
                             "Fn::Join": [
@@ -238,6 +279,21 @@
                               ]
                             ]
                           }
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "cognito-idp:AdminAddUserToGroup",
+                            "cognito-idp:ListUsers"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::GetAtt": [
+                                "CognitoUserPool",
+                                "Arn"
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
@@ -264,9 +320,9 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
-                "Handler": "handlers/auth.preSignUp",
+                "Handler": "handlers.auth.preSignUp",
                 "Runtime": "python3.12",
                 "FunctionName": "back-dev-preRegistration",
                 "MemorySize": 1024,
@@ -296,9 +352,9 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
-                "Handler": "handlers/auth.postConfirmation",
+                "Handler": "handlers.auth.postConfirmation",
                 "Runtime": "python3.12",
                 "FunctionName": "back-dev-postConfirmation",
                 "MemorySize": 1024,
@@ -328,7 +384,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers.artist-creation.lambda_handler",
                 "Runtime": "python3.12",
@@ -360,7 +416,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers.filter.filter_handler",
                 "Runtime": "python3.12",
@@ -392,7 +448,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers.get_artists.lambda_handler",
                 "Runtime": "python3.12",
@@ -424,7 +480,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers.get_album.lambda_handler",
                 "Runtime": "python3.12",
@@ -456,7 +512,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers/upload_music.lambda_handler",
                 "Runtime": "python3.12",
@@ -488,7 +544,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers/get_presigned_url.lambda_handler",
                 "Runtime": "python3.12",
@@ -520,7 +576,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                  "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
                 },
                 "Handler": "handlers.create_album.lambda_handler",
                 "Runtime": "python3.12",
@@ -547,94 +603,262 @@
                 "CreateAlbumLogGroup"
               ]
             },
-            "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU": {
+            "GetAllMusicLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+                },
+                "Handler": "handlers.get_music.lambda_handler",
+                "Runtime": "python3.12",
+                "FunctionName": "back-dev-getAllMusic",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "ARTISTS_TABLE": "back-artists",
+                    "MUSIC_BUCKET": "back-music-bucket",
+                    "MUSIC_FILES_TABLE": "back-music-files",
+                    "MUSIC_META_TABLE": "back-music-meta",
+                    "ALBUMS_TABLE": "back-albums"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "GetAllMusicLogGroup"
+              ]
+            },
+            "SubscribeUserLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+                },
+                "Handler": "handlers.subscribe_user.lambda_handler",
+                "Runtime": "python3.12",
+                "FunctionName": "back-dev-subscribeUser",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "ARTISTS_TABLE": "back-artists",
+                    "MUSIC_BUCKET": "back-music-bucket",
+                    "MUSIC_FILES_TABLE": "back-music-files",
+                    "MUSIC_META_TABLE": "back-music-meta",
+                    "ALBUMS_TABLE": "back-albums"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "SubscribeUserLogGroup"
+              ]
+            },
+            "CreateNotificationLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+                },
+                "Handler": "handlers.create_notifications.lambda_handler",
+                "Runtime": "python3.12",
+                "FunctionName": "back-dev-createNotification",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "ARTISTS_TABLE": "back-artists",
+                    "MUSIC_BUCKET": "back-music-bucket",
+                    "MUSIC_FILES_TABLE": "back-music-files",
+                    "MUSIC_META_TABLE": "back-music-meta",
+                    "ALBUMS_TABLE": "back-albums"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "CreateNotificationLogGroup"
+              ]
+            },
+            "GetUserNotificationsLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                  "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+                },
+                "Handler": "handlers.get_user_notifications.lambda_handler",
+                "Runtime": "python3.12",
+                "FunctionName": "back-dev-getUserNotifications",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "ARTISTS_TABLE": "back-artists",
+                    "MUSIC_BUCKET": "back-music-bucket",
+                    "MUSIC_FILES_TABLE": "back-music-files",
+                    "MUSIC_META_TABLE": "back-music-meta",
+                    "ALBUMS_TABLE": "back-albums"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "GetUserNotificationsLogGroup"
+              ]
+            },
+            "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "PreRegistrationLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g": {
+            "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "PostConfirmationLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss": {
+            "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "CreateArtistLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4": {
+            "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "FilterHandlerLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI": {
+            "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "GetArtistsLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU": {
+            "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "GetAlbumsLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4": {
+            "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "UploadMusicLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0": {
+            "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "GetPresignedUrlLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
-            "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8": {
+            "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "CreateAlbumLambdaFunction"
                 },
-                "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+              }
+            },
+            "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "GetAllMusicLambdaFunction"
+                },
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+              }
+            },
+            "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "SubscribeUserLambdaFunction"
+                },
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+              }
+            },
+            "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "CreateNotificationLambdaFunction"
+                },
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+              }
+            },
+            "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "GetUserNotificationsLambdaFunction"
+                },
+                "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
               }
             },
             "CognitoUserPoolMapsterUserPool": {
@@ -1285,6 +1509,306 @@
               },
               "DependsOn": "HttpApiIntegrationCreateAlbum"
             },
+            "GetAllMusicLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "GetAllMusicLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationGetAllMusic": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "GetAllMusicLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRouteGetMusicGetall": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "GET /music/getAll",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationGetAllMusic"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationGetAllMusic"
+            },
+            "SubscribeUserLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "SubscribeUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationSubscribeUser": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "SubscribeUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRoutePostSubscribe": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "POST /subscribe",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationSubscribeUser"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationSubscribeUser"
+            },
+            "CreateNotificationLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "CreateNotificationLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationCreateNotification": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "CreateNotificationLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRoutePostNotify": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "POST /notify",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationCreateNotification"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationCreateNotification"
+            },
+            "GetUserNotificationsLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "GetUserNotificationsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationGetUserNotifications": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "GetUserNotificationsLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRouteGetGetusernotifications": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "GET /getUserNotifications",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationGetUserNotifications"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationGetUserNotifications"
+            },
             "ArtistsDynamoDBTable": {
               "Type": "AWS::DynamoDB::Table",
               "Properties": {
@@ -1393,6 +1917,60 @@
                 "BillingMode": "PAY_PER_REQUEST"
               }
             },
+            "SubscriptionsTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "back-subscriptions",
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "userId",
+                    "AttributeType": "S"
+                  },
+                  {
+                    "AttributeName": "targetId",
+                    "AttributeType": "S"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "userId",
+                    "KeyType": "HASH"
+                  },
+                  {
+                    "AttributeName": "targetId",
+                    "KeyType": "RANGE"
+                  }
+                ]
+              }
+            },
+            "NotificationsTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "back-notifications",
+                "BillingMode": "PAY_PER_REQUEST",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "userId",
+                    "AttributeType": "S"
+                  },
+                  {
+                    "AttributeName": "notificationId",
+                    "AttributeType": "S"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "userId",
+                    "KeyType": "HASH"
+                  },
+                  {
+                    "AttributeName": "notificationId",
+                    "KeyType": "RANGE"
+                  }
+                ]
+              }
+            },
             "CognitoUserPool": {
               "Type": "AWS::Cognito::UserPool",
               "Properties": {
@@ -1400,9 +1978,7 @@
                 "UsernameAttributes": [
                   "email"
                 ],
-                "AutoVerifiedAttributes": [
-                  "email"
-                ],
+                "AutoVerifiedAttributes": [],
                 "AdminCreateUserConfig": {
                   "AllowAdminCreateUserOnly": false
                 },
@@ -1486,7 +2062,7 @@
             "PreRegistrationLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU"
+                "Ref": "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18"
               },
               "Export": {
                 "Name": "sls-back-dev-PreRegistrationLambdaFunctionQualifiedArn"
@@ -1495,7 +2071,7 @@
             "PostConfirmationLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g"
+                "Ref": "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI"
               },
               "Export": {
                 "Name": "sls-back-dev-PostConfirmationLambdaFunctionQualifiedArn"
@@ -1504,7 +2080,7 @@
             "CreateArtistLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss"
+                "Ref": "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY"
               },
               "Export": {
                 "Name": "sls-back-dev-CreateArtistLambdaFunctionQualifiedArn"
@@ -1513,7 +2089,7 @@
             "FilterHandlerLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4"
+                "Ref": "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw"
               },
               "Export": {
                 "Name": "sls-back-dev-FilterHandlerLambdaFunctionQualifiedArn"
@@ -1522,7 +2098,7 @@
             "GetArtistsLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI"
+                "Ref": "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE"
               },
               "Export": {
                 "Name": "sls-back-dev-GetArtistsLambdaFunctionQualifiedArn"
@@ -1531,7 +2107,7 @@
             "GetAlbumsLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU"
+                "Ref": "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As"
               },
               "Export": {
                 "Name": "sls-back-dev-GetAlbumsLambdaFunctionQualifiedArn"
@@ -1540,7 +2116,7 @@
             "UploadMusicLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4"
+                "Ref": "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA"
               },
               "Export": {
                 "Name": "sls-back-dev-UploadMusicLambdaFunctionQualifiedArn"
@@ -1549,7 +2125,7 @@
             "GetPresignedUrlLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0"
+                "Ref": "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4"
               },
               "Export": {
                 "Name": "sls-back-dev-GetPresignedUrlLambdaFunctionQualifiedArn"
@@ -1558,10 +2134,46 @@
             "CreateAlbumLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8"
+                "Ref": "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors"
               },
               "Export": {
                 "Name": "sls-back-dev-CreateAlbumLambdaFunctionQualifiedArn"
+              }
+            },
+            "GetAllMusicLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8"
+              },
+              "Export": {
+                "Name": "sls-back-dev-GetAllMusicLambdaFunctionQualifiedArn"
+              }
+            },
+            "SubscribeUserLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE"
+              },
+              "Export": {
+                "Name": "sls-back-dev-SubscribeUserLambdaFunctionQualifiedArn"
+              }
+            },
+            "CreateNotificationLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE"
+              },
+              "Export": {
+                "Name": "sls-back-dev-CreateNotificationLambdaFunctionQualifiedArn"
+              }
+            },
+            "GetUserNotificationsLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA"
+              },
+              "Export": {
+                "Name": "sls-back-dev-GetUserNotificationsLambdaFunctionQualifiedArn"
               }
             },
             "HttpApiId": {
@@ -1604,7 +2216,7 @@
       },
       "functions": {
         "preRegistration": {
-          "handler": "handlers/auth.preSignUp",
+          "handler": "handlers.auth.preSignUp",
           "events": [
             {
               "cognitoUserPool": {
@@ -1619,10 +2231,10 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU"
+          "versionLogicalId": "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18"
         },
         "postConfirmation": {
-          "handler": "handlers/auth.postConfirmation",
+          "handler": "handlers.auth.postConfirmation",
           "events": [
             {
               "cognitoUserPool": {
@@ -1637,7 +2249,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g"
+          "versionLogicalId": "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI"
         },
         "createArtist": {
           "handler": "handlers.artist-creation.lambda_handler",
@@ -1657,7 +2269,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss"
+          "versionLogicalId": "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY"
         },
         "filterHandler": {
           "handler": "handlers.filter.filter_handler",
@@ -1684,7 +2296,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4"
+          "versionLogicalId": "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw"
         },
         "getArtists": {
           "handler": "handlers.get_artists.lambda_handler",
@@ -1704,7 +2316,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI"
+          "versionLogicalId": "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE"
         },
         "getAlbums": {
           "handler": "handlers.get_album.lambda_handler",
@@ -1724,7 +2336,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU"
+          "versionLogicalId": "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As"
         },
         "uploadMusic": {
           "handler": "handlers/upload_music.lambda_handler",
@@ -1745,7 +2357,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4"
+          "versionLogicalId": "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA"
         },
         "getPresignedUrl": {
           "handler": "handlers/get_presigned_url.lambda_handler",
@@ -1766,7 +2378,7 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0"
+          "versionLogicalId": "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4"
         },
         "createAlbum": {
           "handler": "handlers.create_album.lambda_handler",
@@ -1786,7 +2398,91 @@
           "timeout": 6,
           "runtime": "python3.12",
           "vpc": {},
-          "versionLogicalId": "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8"
+          "versionLogicalId": "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors"
+        },
+        "getAllMusic": {
+          "handler": "handlers.get_music.lambda_handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/music/getAll",
+                "method": "get",
+                "cors": true
+              },
+              "resolvedMethod": "GET",
+              "resolvedPath": "/music/getAll"
+            }
+          ],
+          "name": "back-dev-getAllMusic",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "python3.12",
+          "vpc": {},
+          "versionLogicalId": "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8"
+        },
+        "subscribeUser": {
+          "handler": "handlers.subscribe_user.lambda_handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/subscribe",
+                "method": "post",
+                "cors": true
+              },
+              "resolvedMethod": "POST",
+              "resolvedPath": "/subscribe"
+            }
+          ],
+          "name": "back-dev-subscribeUser",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "python3.12",
+          "vpc": {},
+          "versionLogicalId": "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE"
+        },
+        "createNotification": {
+          "handler": "handlers.create_notifications.lambda_handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/notify",
+                "method": "post",
+                "cors": true
+              },
+              "resolvedMethod": "POST",
+              "resolvedPath": "/notify"
+            }
+          ],
+          "name": "back-dev-createNotification",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "python3.12",
+          "vpc": {},
+          "versionLogicalId": "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE"
+        },
+        "getUserNotifications": {
+          "handler": "handlers.get_user_notifications.lambda_handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/getUserNotifications",
+                "method": "get",
+                "cors": true
+              },
+              "resolvedMethod": "GET",
+              "resolvedPath": "/getUserNotifications"
+            }
+          ],
+          "name": "back-dev-getUserNotifications",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "python3.12",
+          "vpc": {},
+          "versionLogicalId": "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA"
         }
       },
       "resources": {
@@ -1899,6 +2595,60 @@
               "BillingMode": "PAY_PER_REQUEST"
             }
           },
+          "SubscriptionsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "back-subscriptions",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "targetId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "targetId",
+                  "KeyType": "RANGE"
+                }
+              ]
+            }
+          },
+          "NotificationsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "back-notifications",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "notificationId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "notificationId",
+                  "KeyType": "RANGE"
+                }
+              ]
+            }
+          },
           "CognitoUserPool": {
             "Type": "AWS::Cognito::UserPool",
             "Properties": {
@@ -1906,9 +2656,7 @@
               "UsernameAttributes": [
                 "email"
               ],
-              "AutoVerifiedAttributes": [
-                "email"
-              ],
+              "AutoVerifiedAttributes": [],
               "AdminCreateUserConfig": {
                 "AllowAdminCreateUserOnly": false
               },
@@ -2018,7 +2766,8 @@
               "Effect": "Allow",
               "Action": [
                 "s3:PutObject",
-                "s3:PutObjectAcl"
+                "s3:PutObjectAcl",
+                "s3:GetObject"
               ],
               "Resource": {
                 "Fn::Join": [
@@ -2030,6 +2779,21 @@
                   ]
                 ]
               }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:AdminAddUserToGroup",
+                "cognito-idp:ListUsers"
+              ],
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CognitoUserPool",
+                    "Arn"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -2128,6 +2892,30 @@
               "LogGroupName": "/aws/lambda/back-dev-createAlbum"
             }
           },
+          "GetAllMusicLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/back-dev-getAllMusic"
+            }
+          },
+          "SubscribeUserLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/back-dev-subscribeUser"
+            }
+          },
+          "CreateNotificationLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/back-dev-createNotification"
+            }
+          },
+          "GetUserNotificationsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/back-dev-getUserNotifications"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -2205,7 +2993,8 @@
                         "Effect": "Allow",
                         "Action": [
                           "s3:PutObject",
-                          "s3:PutObjectAcl"
+                          "s3:PutObjectAcl",
+                          "s3:GetObject"
                         ],
                         "Resource": {
                           "Fn::Join": [
@@ -2217,6 +3006,21 @@
                             ]
                           ]
                         }
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "cognito-idp:AdminAddUserToGroup",
+                          "cognito-idp:ListUsers"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::GetAtt": [
+                              "CognitoUserPool",
+                              "Arn"
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
@@ -2243,9 +3047,9 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
-              "Handler": "handlers/auth.preSignUp",
+              "Handler": "handlers.auth.preSignUp",
               "Runtime": "python3.12",
               "FunctionName": "back-dev-preRegistration",
               "MemorySize": 1024,
@@ -2275,9 +3079,9 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
-              "Handler": "handlers/auth.postConfirmation",
+              "Handler": "handlers.auth.postConfirmation",
               "Runtime": "python3.12",
               "FunctionName": "back-dev-postConfirmation",
               "MemorySize": 1024,
@@ -2307,7 +3111,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers.artist-creation.lambda_handler",
               "Runtime": "python3.12",
@@ -2339,7 +3143,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers.filter.filter_handler",
               "Runtime": "python3.12",
@@ -2371,7 +3175,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers.get_artists.lambda_handler",
               "Runtime": "python3.12",
@@ -2403,7 +3207,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers.get_album.lambda_handler",
               "Runtime": "python3.12",
@@ -2435,7 +3239,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers/upload_music.lambda_handler",
               "Runtime": "python3.12",
@@ -2467,7 +3271,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers/get_presigned_url.lambda_handler",
               "Runtime": "python3.12",
@@ -2499,7 +3303,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-                "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
               },
               "Handler": "handlers.create_album.lambda_handler",
               "Runtime": "python3.12",
@@ -2526,94 +3330,262 @@
               "CreateAlbumLogGroup"
             ]
           },
-          "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU": {
+          "GetAllMusicLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+              },
+              "Handler": "handlers.get_music.lambda_handler",
+              "Runtime": "python3.12",
+              "FunctionName": "back-dev-getAllMusic",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ARTISTS_TABLE": "back-artists",
+                  "MUSIC_BUCKET": "back-music-bucket",
+                  "MUSIC_FILES_TABLE": "back-music-files",
+                  "MUSIC_META_TABLE": "back-music-meta",
+                  "ALBUMS_TABLE": "back-albums"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetAllMusicLogGroup"
+            ]
+          },
+          "SubscribeUserLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+              },
+              "Handler": "handlers.subscribe_user.lambda_handler",
+              "Runtime": "python3.12",
+              "FunctionName": "back-dev-subscribeUser",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ARTISTS_TABLE": "back-artists",
+                  "MUSIC_BUCKET": "back-music-bucket",
+                  "MUSIC_FILES_TABLE": "back-music-files",
+                  "MUSIC_META_TABLE": "back-music-meta",
+                  "ALBUMS_TABLE": "back-albums"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "SubscribeUserLogGroup"
+            ]
+          },
+          "CreateNotificationLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+              },
+              "Handler": "handlers.create_notifications.lambda_handler",
+              "Runtime": "python3.12",
+              "FunctionName": "back-dev-createNotification",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ARTISTS_TABLE": "back-artists",
+                  "MUSIC_BUCKET": "back-music-bucket",
+                  "MUSIC_FILES_TABLE": "back-music-files",
+                  "MUSIC_META_TABLE": "back-music-meta",
+                  "ALBUMS_TABLE": "back-albums"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "CreateNotificationLogGroup"
+            ]
+          },
+          "GetUserNotificationsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+                "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+              },
+              "Handler": "handlers.get_user_notifications.lambda_handler",
+              "Runtime": "python3.12",
+              "FunctionName": "back-dev-getUserNotifications",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ARTISTS_TABLE": "back-artists",
+                  "MUSIC_BUCKET": "back-music-bucket",
+                  "MUSIC_FILES_TABLE": "back-music-files",
+                  "MUSIC_META_TABLE": "back-music-meta",
+                  "ALBUMS_TABLE": "back-albums"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetUserNotificationsLogGroup"
+            ]
+          },
+          "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "PreRegistrationLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g": {
+          "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "PostConfirmationLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss": {
+          "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateArtistLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4": {
+          "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "FilterHandlerLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI": {
+          "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetArtistsLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU": {
+          "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAlbumsLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4": {
+          "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UploadMusicLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0": {
+          "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetPresignedUrlLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
-          "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8": {
+          "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateAlbumLambdaFunction"
               },
-              "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+            }
+          },
+          "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetAllMusicLambdaFunction"
+              },
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+            }
+          },
+          "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SubscribeUserLambdaFunction"
+              },
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+            }
+          },
+          "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateNotificationLambdaFunction"
+              },
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+            }
+          },
+          "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetUserNotificationsLambdaFunction"
+              },
+              "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
             }
           },
           "CognitoUserPoolMapsterUserPool": {
@@ -3264,6 +4236,306 @@
             },
             "DependsOn": "HttpApiIntegrationCreateAlbum"
           },
+          "GetAllMusicLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetAllMusicLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGetAllMusic": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "Fn::GetAtt": [
+                  "GetAllMusicLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRouteGetMusicGetall": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /music/getAll",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGetAllMusic"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGetAllMusic"
+          },
+          "SubscribeUserLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SubscribeUserLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationSubscribeUser": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "Fn::GetAtt": [
+                  "SubscribeUserLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePostSubscribe": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /subscribe",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationSubscribeUser"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationSubscribeUser"
+          },
+          "CreateNotificationLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateNotificationLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationCreateNotification": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "Fn::GetAtt": [
+                  "CreateNotificationLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePostNotify": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /notify",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationCreateNotification"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationCreateNotification"
+          },
+          "GetUserNotificationsLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetUserNotificationsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGetUserNotifications": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "Fn::GetAtt": [
+                  "GetUserNotificationsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRouteGetGetusernotifications": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /getUserNotifications",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGetUserNotifications"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGetUserNotifications"
+          },
           "ArtistsDynamoDBTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
@@ -3372,6 +4644,60 @@
               "BillingMode": "PAY_PER_REQUEST"
             }
           },
+          "SubscriptionsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "back-subscriptions",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "targetId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "targetId",
+                  "KeyType": "RANGE"
+                }
+              ]
+            }
+          },
+          "NotificationsTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "back-notifications",
+              "BillingMode": "PAY_PER_REQUEST",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "notificationId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "notificationId",
+                  "KeyType": "RANGE"
+                }
+              ]
+            }
+          },
           "CognitoUserPool": {
             "Type": "AWS::Cognito::UserPool",
             "Properties": {
@@ -3379,9 +4705,7 @@
               "UsernameAttributes": [
                 "email"
               ],
-              "AutoVerifiedAttributes": [
-                "email"
-              ],
+              "AutoVerifiedAttributes": [],
               "AdminCreateUserConfig": {
                 "AllowAdminCreateUserOnly": false
               },
@@ -3465,7 +4789,7 @@
           "PreRegistrationLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU"
+              "Ref": "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18"
             },
             "Export": {
               "Name": "sls-back-dev-PreRegistrationLambdaFunctionQualifiedArn"
@@ -3474,7 +4798,7 @@
           "PostConfirmationLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g"
+              "Ref": "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI"
             },
             "Export": {
               "Name": "sls-back-dev-PostConfirmationLambdaFunctionQualifiedArn"
@@ -3483,7 +4807,7 @@
           "CreateArtistLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss"
+              "Ref": "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY"
             },
             "Export": {
               "Name": "sls-back-dev-CreateArtistLambdaFunctionQualifiedArn"
@@ -3492,7 +4816,7 @@
           "FilterHandlerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4"
+              "Ref": "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw"
             },
             "Export": {
               "Name": "sls-back-dev-FilterHandlerLambdaFunctionQualifiedArn"
@@ -3501,7 +4825,7 @@
           "GetArtistsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI"
+              "Ref": "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE"
             },
             "Export": {
               "Name": "sls-back-dev-GetArtistsLambdaFunctionQualifiedArn"
@@ -3510,7 +4834,7 @@
           "GetAlbumsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU"
+              "Ref": "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As"
             },
             "Export": {
               "Name": "sls-back-dev-GetAlbumsLambdaFunctionQualifiedArn"
@@ -3519,7 +4843,7 @@
           "UploadMusicLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4"
+              "Ref": "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA"
             },
             "Export": {
               "Name": "sls-back-dev-UploadMusicLambdaFunctionQualifiedArn"
@@ -3528,7 +4852,7 @@
           "GetPresignedUrlLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0"
+              "Ref": "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4"
             },
             "Export": {
               "Name": "sls-back-dev-GetPresignedUrlLambdaFunctionQualifiedArn"
@@ -3537,10 +4861,46 @@
           "CreateAlbumLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8"
+              "Ref": "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors"
             },
             "Export": {
               "Name": "sls-back-dev-CreateAlbumLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetAllMusicLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8"
+            },
+            "Export": {
+              "Name": "sls-back-dev-GetAllMusicLambdaFunctionQualifiedArn"
+            }
+          },
+          "SubscribeUserLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE"
+            },
+            "Export": {
+              "Name": "sls-back-dev-SubscribeUserLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreateNotificationLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE"
+            },
+            "Export": {
+              "Name": "sls-back-dev-CreateNotificationLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetUserNotificationsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA"
+            },
+            "Export": {
+              "Name": "sls-back-dev-GetUserNotificationsLambdaFunctionQualifiedArn"
             }
           },
           "HttpApiId": {
@@ -3590,7 +4950,7 @@
       "serviceProvider": null,
       "instanceParameters": null
     },
-    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\r\n# org: petardragicevic\r\n# \"app\" enables Serverless Framework Dashboard features and sharing them with other Services.\r\napp: app\r\n# \"service\" is the name of this project. This will also be added to your AWS resource names.\r\nservice: back\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: python3.12\r\n  region: eu-central-1\r\n  environment:\r\n    ARTISTS_TABLE: ${self:service}-artists\r\n    MUSIC_BUCKET: ${self:service}-music-bucket\r\n    MUSIC_FILES_TABLE: ${self:service}-music-files\r\n    MUSIC_META_TABLE: ${self:service}-music-meta\r\n    ALBUMS_TABLE: ${self:service}-albums\r\n  iam:\r\n    role:\r\n      statements:\r\n        - Effect: \"Allow\"\r\n          Action:\r\n            - \"dynamodb:PutItem\"\r\n            - \"dynamodb:Scan\"\r\n            - \"dynamodb:GetItem\"\r\n            - \"dynamodb:Query\"\r\n          Resource:\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-files\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta\"\r\n\r\n        - Effect: \"Allow\"\r\n          Action:\r\n             - \"s3:PutObject\" \r\n             - \"s3:PutObjectAcl\" \r\n          Resource:\r\n            Fn::Join:\r\n              - \"\"\r\n              - - \"arn:aws:s3:::\"\r\n                - \"${self:service}-music-bucket\"\r\n                - \"/*\"\r\n  httpApi:\r\n    cors:\r\n      allowedOrigins:\r\n        - \"*\"\r\n      allowedMethods:\r\n        - \"PUT\"\r\n        - \"GET\"\r\n        - \"POST\"\r\n        - \"PUT\"\r\n        - \"DELETE\"\r\n        - \"OPTIONS\"\r\n      allowedHeaders:\r\n        - \"Content-Type\"\r\n        - \"Authorization\"\r\n      maxAge: 600\r\n    authorizers:\r\n      cognitoAuthorizer:\r\n        type: jwt\r\n        identitySource: $request.header.Authorization\r\n        issuerUrl: !Sub \"https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}\"\r\n        audience:\r\n          - !Ref CognitoUserPoolClientWeb\r\n\r\nfunctions:\r\n  preRegistration:\r\n    handler: handlers/auth.preSignUp\r\n    events:\r\n      - cognitoUserPool:\r\n          pool: MapsterUserPool\r\n          trigger: PreSignUp\r\n\r\n  postConfirmation:\r\n    handler: handlers/auth.postConfirmation\r\n    events:\r\n      - cognitoUserPool:\r\n          pool: MapsterUserPool\r\n          trigger: PostConfirmation\r\n\r\n  createArtist:\r\n    handler: handlers.artist-creation.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /artists\r\n          method: post\r\n\r\n  filterHandler:\r\n    handler: handlers.filter.filter_handler\r\n    events:\r\n      - httpApi:\r\n          path: /filter\r\n          method: get\r\n          request:\r\n            parameters:\r\n              querystrings:\r\n                genre: true\r\n  getArtists:\r\n    handler: handlers.get_artists.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /artists\r\n          method: get\r\n\r\n  getAlbums:\r\n    handler: handlers.get_album.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /albums\r\n          method: get\r\n\r\n\r\n  uploadMusic:\r\n    handler: handlers/upload_music.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /music/metadata\r\n          method: post\r\n          cors: true\r\n\r\n  getPresignedUrl:\r\n    handler: handlers/get_presigned_url.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /music/presigned\r\n          method: post\r\n          cors: true\r\n\r\n  createAlbum:\r\n    handler: handlers.create_album.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /albums\r\n          method: post\r\n\r\n\r\nresources:\r\n  Resources:\r\n    ArtistsDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-artists\r\n        AttributeDefinitions:\r\n          - AttributeName: artistId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: artistId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n    AlbumsDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-albums\r\n        AttributeDefinitions:\r\n          - AttributeName: genre\r\n            AttributeType: S\r\n          - AttributeName: albumId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: genre\r\n            KeyType: HASH\r\n          - AttributeName: albumId\r\n            KeyType: RANGE\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n\r\n    MusicS3Bucket:\r\n      Type: AWS::S3::Bucket\r\n      Properties:\r\n        BucketName: ${self:service}-music-bucket\r\n        CorsConfiguration:\r\n          CorsRules:\r\n            - AllowedHeaders:\r\n                 - '*'\r\n              AllowedMethods:\r\n                - PUT # KRITIČNO: Dozvoljavamo PUT za upload fajla\r\n                - GET\r\n                - POST\r\n              AllowedOrigins:\r\n               - '*' # Dozvolite pristup sa svih domena\r\n              MaxAge: 3000\r\n\r\n\r\n    MusicFilesDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-music-files\r\n        AttributeDefinitions:\r\n          - AttributeName: musicId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: musicId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n    MusicMetaDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-music-meta\r\n        AttributeDefinitions:\r\n          - AttributeName: musicId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: musicId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n    #region Cognito\r\n\r\n    CognitoUserPool:\r\n      Type: AWS::Cognito::UserPool\r\n      Properties:\r\n        UserPoolName: MapsterUserPool\r\n        UsernameAttributes: [email]\r\n        AutoVerifiedAttributes: [email]\r\n        #        SelfSignUpEnabled: true\r\n        #        AccountRecoverySetting:\r\n        #          RecoveryMechanisms: []\r\n\r\n        AdminCreateUserConfig:\r\n          AllowAdminCreateUserOnly: false\r\n\r\n        Schema:\r\n          - Name: given_name\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n          - Name: family_name\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n          - Name: email\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: false\r\n          - Name: birthdate\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n\r\n        Policies:\r\n          PasswordPolicy:\r\n            MinimumLength: 6\r\n            RequireLowercase: true\r\n            RequireUppercase: false\r\n            RequireNumbers: false\r\n            RequireSymbols: false\r\n\r\n    AdminGroup:\r\n      Type: AWS::Cognito::UserPoolGroup\r\n      Properties:\r\n        GroupName: Admin\r\n        UserPoolId: !Ref CognitoUserPool\r\n        Description: \"Mapster administrators group\"\r\n        Precedence: 1\r\n\r\n    UserGroup:\r\n      Type: AWS::Cognito::UserPoolGroup\r\n      Properties:\r\n        GroupName: User\r\n        UserPoolId: !Ref CognitoUserPool\r\n        Description: \"Mapster regular users group\"\r\n        Precedence: 10\r\n\r\n    CognitoUserPoolClientWeb:\r\n      Type: AWS::Cognito::UserPoolClient\r\n      Properties:\r\n        ClientName: MapsterWebClient\r\n        UserPoolId: !Ref CognitoUserPool\r\n        GenerateSecret: false\r\n        ExplicitAuthFlows:\r\n          - ALLOW_USER_SRP_AUTH\r\n          - ALLOW_USER_PASSWORD_AUTH\r\n          - ALLOW_REFRESH_TOKEN_AUTH\r\n        PreventUserExistenceErrors: ENABLED\r\n\r\n    #endregion\r\n",
+    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\r\n# org: petardragicevic\r\n# \"app\" enables Serverless Framework Dashboard features and sharing them with other Services.\r\napp: app\r\n# \"service\" is the name of this project. This will also be added to your AWS resource names.\r\nservice: back\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: python3.12\r\n  region: eu-central-1\r\n  environment:\r\n    ARTISTS_TABLE: ${self:service}-artists\r\n    MUSIC_BUCKET: ${self:service}-music-bucket\r\n    MUSIC_FILES_TABLE: ${self:service}-music-files\r\n    MUSIC_META_TABLE: ${self:service}-music-meta\r\n    ALBUMS_TABLE: ${self:service}-albums\r\n  iam:\r\n    role:\r\n      statements:\r\n        - Effect: \"Allow\"\r\n          Action:\r\n            - \"dynamodb:PutItem\"\r\n            - \"dynamodb:Scan\"\r\n            - \"dynamodb:GetItem\"\r\n            - \"dynamodb:Query\"\r\n          Resource:\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-artists\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-albums\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-files\"\r\n            - \"arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-music-meta\"\r\n\r\n        - Effect: \"Allow\"\r\n          Action:\r\n             - \"s3:PutObject\" \r\n             - \"s3:PutObjectAcl\" \r\n             - \"s3:GetObject\"\r\n          Resource:\r\n            Fn::Join:\r\n              - \"\"\r\n              - - \"arn:aws:s3:::\"\r\n                - \"${self:service}-music-bucket\"\r\n                - \"/*\"\r\n                \r\n        - Effect: \"Allow\"\r\n          Action:\r\n            - \"cognito-idp:AdminAddUserToGroup\"\r\n            - \"cognito-idp:ListUsers\" \r\n          Resource:\r\n            - !GetAtt CognitoUserPool.Arn \r\n          \r\n  httpApi:\r\n    cors:\r\n      allowedOrigins:\r\n        - \"*\"\r\n      allowedMethods:\r\n        - \"PUT\"\r\n        - \"GET\"\r\n        - \"POST\"\r\n        - \"PUT\"\r\n        - \"DELETE\"\r\n        - \"OPTIONS\"\r\n      allowedHeaders:\r\n        - \"Content-Type\"\r\n        - \"Authorization\"\r\n      maxAge: 600\r\n    authorizers:\r\n      cognitoAuthorizer:\r\n        type: jwt\r\n        identitySource: $request.header.Authorization\r\n        issuerUrl: !Sub \"https://cognito-idp.${self:provider.region}.amazonaws.com/${CognitoUserPool}\"\r\n        audience:\r\n          - !Ref CognitoUserPoolClientWeb\r\n\r\nfunctions:\r\n  preRegistration:\r\n    handler: handlers.auth.preSignUp\r\n    events:\r\n      - cognitoUserPool:\r\n          pool: MapsterUserPool\r\n          trigger: PreSignUp\r\n\r\n  postConfirmation:\r\n    handler: handlers.auth.postConfirmation\r\n    events:\r\n      - cognitoUserPool:\r\n          pool: MapsterUserPool\r\n          trigger: PostConfirmation\r\n\r\n  createArtist:\r\n    handler: handlers.artist-creation.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /artists\r\n          method: post\r\n\r\n  filterHandler:\r\n    handler: handlers.filter.filter_handler\r\n    events:\r\n      - httpApi:\r\n          path: /filter\r\n          method: get\r\n          request:\r\n            parameters:\r\n              querystrings:\r\n                genre: true\r\n  getArtists:\r\n    handler: handlers.get_artists.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /artists\r\n          method: get\r\n\r\n  getAlbums:\r\n    handler: handlers.get_album.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /albums\r\n          method: get\r\n\r\n\r\n  uploadMusic:\r\n    handler: handlers/upload_music.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /music/metadata\r\n          method: post\r\n          cors: true\r\n\r\n  getPresignedUrl:\r\n    handler: handlers/get_presigned_url.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /music/presigned\r\n          method: post\r\n          cors: true\r\n\r\n  createAlbum:\r\n    handler: handlers.create_album.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /albums\r\n          method: post\r\n\r\n  getAllMusic:\r\n    handler: handlers.get_music.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /music/getAll\r\n          method: get\r\n          cors: true\r\n\r\n  subscribeUser:\r\n    handler: handlers.subscribe_user.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /subscribe\r\n          method: post\r\n          cors: true\r\n    \r\n\r\n  createNotification:\r\n    handler: handlers.create_notifications.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /notify\r\n          method: post\r\n          cors: true\r\n\r\n  getUserNotifications:\r\n    handler: handlers.get_user_notifications.lambda_handler\r\n    events:\r\n      - httpApi:\r\n          path: /getUserNotifications\r\n          method: get\r\n          cors: true\r\n    \r\nresources:\r\n  Resources:\r\n    ArtistsDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-artists\r\n        AttributeDefinitions:\r\n          - AttributeName: artistId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: artistId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n    AlbumsDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-albums\r\n        AttributeDefinitions:\r\n          - AttributeName: genre\r\n            AttributeType: S\r\n          - AttributeName: albumId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: genre\r\n            KeyType: HASH\r\n          - AttributeName: albumId\r\n            KeyType: RANGE\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n\r\n    MusicS3Bucket:\r\n      Type: AWS::S3::Bucket\r\n      Properties:\r\n        BucketName: ${self:service}-music-bucket\r\n        CorsConfiguration:\r\n          CorsRules:\r\n            - AllowedHeaders:\r\n                 - '*'\r\n              AllowedMethods:\r\n                - PUT # KRITIČNO: Dozvoljavamo PUT za upload fajla\r\n                - GET\r\n                - POST\r\n              AllowedOrigins:\r\n               - '*' # Dozvolite pristup sa svih domena\r\n              MaxAge: 3000\r\n\r\n\r\n    MusicFilesDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-music-files\r\n        AttributeDefinitions:\r\n          - AttributeName: musicId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: musicId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n    MusicMetaDynamoDBTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-music-meta\r\n        AttributeDefinitions:\r\n          - AttributeName: musicId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: musicId\r\n            KeyType: HASH\r\n        BillingMode: PAY_PER_REQUEST\r\n\r\n \r\n    SubscriptionsTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-subscriptions\r\n        BillingMode: PAY_PER_REQUEST\r\n        AttributeDefinitions:\r\n          - AttributeName: userId\r\n            AttributeType: S\r\n          - AttributeName: targetId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: userId\r\n            KeyType: HASH\r\n          - AttributeName: targetId\r\n            KeyType: RANGE\r\n\r\n    NotificationsTable:\r\n      Type: AWS::DynamoDB::Table\r\n      Properties:\r\n        TableName: ${self:service}-notifications\r\n        BillingMode: PAY_PER_REQUEST\r\n        AttributeDefinitions:\r\n          - AttributeName: userId\r\n            AttributeType: S\r\n          - AttributeName: notificationId\r\n            AttributeType: S\r\n        KeySchema:\r\n          - AttributeName: userId\r\n            KeyType: HASH\r\n          - AttributeName: notificationId\r\n            KeyType: RANGE\r\n\r\n\r\n\r\n    #region Cognito\r\n\r\n    CognitoUserPool:\r\n      Type: AWS::Cognito::UserPool\r\n      Properties:\r\n        UserPoolName: MapsterUserPool\r\n        UsernameAttributes: [email]\r\n        AutoVerifiedAttributes: []\r\n        #        SelfSignUpEnabled: true\r\n        #        AccountRecoverySetting:\r\n        #          RecoveryMechanisms: []\r\n\r\n        AdminCreateUserConfig:\r\n          AllowAdminCreateUserOnly: false\r\n\r\n        Schema:\r\n          - Name: given_name\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n          - Name: family_name\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n          - Name: email\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: false\r\n          - Name: birthdate\r\n            AttributeDataType: String\r\n            Required: true\r\n            Mutable: true\r\n\r\n        Policies:\r\n          PasswordPolicy:\r\n            MinimumLength: 6\r\n            RequireLowercase: true\r\n            RequireUppercase: false\r\n            RequireNumbers: false\r\n            RequireSymbols: false\r\n\r\n    AdminGroup:\r\n      Type: AWS::Cognito::UserPoolGroup\r\n      Properties:\r\n        GroupName: Admin\r\n        UserPoolId: !Ref CognitoUserPool\r\n        Description: \"Mapster administrators group\"\r\n        Precedence: 1\r\n\r\n    UserGroup:\r\n      Type: AWS::Cognito::UserPoolGroup\r\n      Properties:\r\n        GroupName: User\r\n        UserPoolId: !Ref CognitoUserPool\r\n        Description: \"Mapster regular users group\"\r\n        Precedence: 10\r\n\r\n    CognitoUserPoolClientWeb:\r\n      Type: AWS::Cognito::UserPoolClient\r\n      Properties:\r\n        ClientName: MapsterWebClient\r\n        UserPoolId: !Ref CognitoUserPool\r\n        GenerateSecret: false\r\n        ExplicitAuthFlows:\r\n          - ALLOW_USER_SRP_AUTH\r\n          - ALLOW_USER_PASSWORD_AUTH\r\n          - ALLOW_REFRESH_TOKEN_AUTH\r\n        PreventUserExistenceErrors: ENABLED\r\n\r\n    #endregion\r\n",
     "command": [
       "deploy"
     ],
@@ -3601,64 +4961,34 @@
     "userName": "petardragicevic",
     "serviceProviderAwsAccountId": "038839713640",
     "serviceProviderAwsCfStackName": "back-dev",
-    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:eu-central-1:038839713640:stack/back-dev/63a472f0-aff7-11f0-b887-0a13909df90f",
-    "serviceProviderAwsCfStackCreated": "2025-10-23T10:02:31.334Z",
-    "serviceProviderAwsCfStackUpdated": "2025-10-23T18:41:24.454Z",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:eu-central-1:038839713640:stack/back-dev/a57aee00-b04e-11f0-8d35-0619273ba615",
+    "serviceProviderAwsCfStackCreated": "2025-10-23T20:27:07.979Z",
+    "serviceProviderAwsCfStackUpdated": "2025-10-24T00:21:17.817Z",
     "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
-        "OutputKey": "GetAlbumsLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getAlbums:37",
-        "Description": "Current Lambda function version",
-        "ExportName": "sls-back-dev-GetAlbumsLambdaFunctionQualifiedArn"
-      },
-      {
         "OutputKey": "PreRegistrationLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-preRegistration:54",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-preRegistration:83",
         "Description": "Current Lambda function version",
         "ExportName": "sls-back-dev-PreRegistrationLambdaFunctionQualifiedArn"
       },
       {
-        "OutputKey": "CreateAlbumLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-createAlbum:4",
-        "Description": "Current Lambda function version",
-        "ExportName": "sls-back-dev-CreateAlbumLambdaFunctionQualifiedArn"
-      },
-      {
         "OutputKey": "CreateArtistLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-createArtist:54",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-createArtist:84",
         "Description": "Current Lambda function version",
         "ExportName": "sls-back-dev-CreateArtistLambdaFunctionQualifiedArn"
       },
       {
-        "OutputKey": "GetArtistsLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getArtists:37",
-        "Description": "Current Lambda function version",
-        "ExportName": "sls-back-dev-GetArtistsLambdaFunctionQualifiedArn"
-      },
-      {
-        "OutputKey": "UploadMusicLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-uploadMusic:37",
-        "Description": "Current Lambda function version",
-        "ExportName": "sls-back-dev-UploadMusicLambdaFunctionQualifiedArn"
-      },
-      {
         "OutputKey": "HttpApiId",
-        "OutputValue": "zv5af32bcd",
+        "OutputValue": "wb71odl9aa",
         "Description": "Id of the HTTP API",
         "ExportName": "sls-back-dev-HttpApiId"
       },
       {
         "OutputKey": "FilterHandlerLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-filterHandler:37",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-filterHandler:67",
         "Description": "Current Lambda function version",
         "ExportName": "sls-back-dev-FilterHandlerLambdaFunctionQualifiedArn"
-      },
-      {
-        "OutputKey": "GetPresignedUrlLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getPresignedUrl:13",
-        "Description": "Current Lambda function version",
-        "ExportName": "sls-back-dev-GetPresignedUrlLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "ServerlessDeploymentBucketName",
@@ -3667,15 +4997,63 @@
       },
       {
         "OutputKey": "PostConfirmationLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-postConfirmation:53",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-postConfirmation:82",
         "Description": "Current Lambda function version",
         "ExportName": "sls-back-dev-PostConfirmationLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "HttpApiUrl",
-        "OutputValue": "https://zv5af32bcd.execute-api.eu-central-1.amazonaws.com",
+        "OutputValue": "https://wb71odl9aa.execute-api.eu-central-1.amazonaws.com",
         "Description": "URL of the HTTP API",
         "ExportName": "sls-back-dev-HttpApiUrl"
+      },
+      {
+        "OutputKey": "GetAlbumsLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getAlbums:66",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetAlbumsLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "CreateAlbumLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-createAlbum:34",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-CreateAlbumLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetSongsByAlbumLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getSongsByAlbum:14",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetSongsByAlbumLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetArtistByIdLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getArtistById:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetArtistByIdLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetArtistsLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getArtists:67",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetArtistsLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "UploadMusicLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-uploadMusic:67",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-UploadMusicLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetUnderscorealbumUnderscorebyUnderscoreidLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-get_album_by_id:14",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetUnderscorealbumUnderscorebyUnderscoreidLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GetPresignedUrlLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:038839713640:function:back-dev-getPresignedUrl:42",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-back-dev-GetPresignedUrlLambdaFunctionQualifiedArn"
       }
     ],
     "compiledCloudFormationTemplate": {
@@ -3734,6 +5112,30 @@
           "Type": "AWS::Logs::LogGroup",
           "Properties": {
             "LogGroupName": "/aws/lambda/back-dev-createAlbum"
+          }
+        },
+        "GetAllMusicLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/back-dev-getAllMusic"
+          }
+        },
+        "SubscribeUserLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/back-dev-subscribeUser"
+          }
+        },
+        "CreateNotificationLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/back-dev-createNotification"
+          }
+        },
+        "GetUserNotificationsLogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": "/aws/lambda/back-dev-getUserNotifications"
           }
         },
         "IamRoleLambdaExecution": {
@@ -3813,7 +5215,8 @@
                       "Effect": "Allow",
                       "Action": [
                         "s3:PutObject",
-                        "s3:PutObjectAcl"
+                        "s3:PutObjectAcl",
+                        "s3:GetObject"
                       ],
                       "Resource": {
                         "Fn::Join": [
@@ -3825,6 +5228,21 @@
                           ]
                         ]
                       }
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "cognito-idp:AdminAddUserToGroup",
+                        "cognito-idp:ListUsers"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::GetAtt": [
+                            "CognitoUserPool",
+                            "Arn"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3851,9 +5269,9 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
-            "Handler": "handlers/auth.preSignUp",
+            "Handler": "handlers.auth.preSignUp",
             "Runtime": "python3.12",
             "FunctionName": "back-dev-preRegistration",
             "MemorySize": 1024,
@@ -3883,9 +5301,9 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
-            "Handler": "handlers/auth.postConfirmation",
+            "Handler": "handlers.auth.postConfirmation",
             "Runtime": "python3.12",
             "FunctionName": "back-dev-postConfirmation",
             "MemorySize": 1024,
@@ -3915,7 +5333,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers.artist-creation.lambda_handler",
             "Runtime": "python3.12",
@@ -3947,7 +5365,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers.filter.filter_handler",
             "Runtime": "python3.12",
@@ -3979,7 +5397,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers.get_artists.lambda_handler",
             "Runtime": "python3.12",
@@ -4011,7 +5429,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers.get_album.lambda_handler",
             "Runtime": "python3.12",
@@ -4043,7 +5461,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers/upload_music.lambda_handler",
             "Runtime": "python3.12",
@@ -4075,7 +5493,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers/get_presigned_url.lambda_handler",
             "Runtime": "python3.12",
@@ -4107,7 +5525,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
-              "S3Key": "serverless/back/dev/1761246678388-2025-10-23T19:11:18.388Z/back.zip"
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
             },
             "Handler": "handlers.create_album.lambda_handler",
             "Runtime": "python3.12",
@@ -4134,94 +5552,262 @@
             "CreateAlbumLogGroup"
           ]
         },
-        "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU": {
+        "GetAllMusicLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+            },
+            "Handler": "handlers.get_music.lambda_handler",
+            "Runtime": "python3.12",
+            "FunctionName": "back-dev-getAllMusic",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "ARTISTS_TABLE": "back-artists",
+                "MUSIC_BUCKET": "back-music-bucket",
+                "MUSIC_FILES_TABLE": "back-music-files",
+                "MUSIC_META_TABLE": "back-music-meta",
+                "ALBUMS_TABLE": "back-albums"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "GetAllMusicLogGroup"
+          ]
+        },
+        "SubscribeUserLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+            },
+            "Handler": "handlers.subscribe_user.lambda_handler",
+            "Runtime": "python3.12",
+            "FunctionName": "back-dev-subscribeUser",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "ARTISTS_TABLE": "back-artists",
+                "MUSIC_BUCKET": "back-music-bucket",
+                "MUSIC_FILES_TABLE": "back-music-files",
+                "MUSIC_META_TABLE": "back-music-meta",
+                "ALBUMS_TABLE": "back-albums"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "SubscribeUserLogGroup"
+          ]
+        },
+        "CreateNotificationLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+            },
+            "Handler": "handlers.create_notifications.lambda_handler",
+            "Runtime": "python3.12",
+            "FunctionName": "back-dev-createNotification",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "ARTISTS_TABLE": "back-artists",
+                "MUSIC_BUCKET": "back-music-bucket",
+                "MUSIC_FILES_TABLE": "back-music-files",
+                "MUSIC_META_TABLE": "back-music-meta",
+                "ALBUMS_TABLE": "back-albums"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "CreateNotificationLogGroup"
+          ]
+        },
+        "GetUserNotificationsLambdaFunction": {
+          "Type": "AWS::Lambda::Function",
+          "Properties": {
+            "Code": {
+              "S3Bucket": "serverless-framework-deployments-eu-central-1-6e66e67f-82bd",
+              "S3Key": "serverless/back/dev/1761265449787-2025-10-24T00:24:09.787Z/back.zip"
+            },
+            "Handler": "handlers.get_user_notifications.lambda_handler",
+            "Runtime": "python3.12",
+            "FunctionName": "back-dev-getUserNotifications",
+            "MemorySize": 1024,
+            "Timeout": 6,
+            "Environment": {
+              "Variables": {
+                "ARTISTS_TABLE": "back-artists",
+                "MUSIC_BUCKET": "back-music-bucket",
+                "MUSIC_FILES_TABLE": "back-music-files",
+                "MUSIC_META_TABLE": "back-music-meta",
+                "ALBUMS_TABLE": "back-albums"
+              }
+            },
+            "Role": {
+              "Fn::GetAtt": [
+                "IamRoleLambdaExecution",
+                "Arn"
+              ]
+            }
+          },
+          "DependsOn": [
+            "GetUserNotificationsLogGroup"
+          ]
+        },
+        "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "PreRegistrationLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g": {
+        "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "PostConfirmationLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss": {
+        "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "CreateArtistLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4": {
+        "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "FilterHandlerLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI": {
+        "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "GetArtistsLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU": {
+        "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "GetAlbumsLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4": {
+        "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "UploadMusicLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0": {
+        "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "GetPresignedUrlLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
-        "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8": {
+        "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "CreateAlbumLambdaFunction"
             },
-            "CodeSha256": "Wbg3zsaxJcC3qo+V8P+3n4FQWLLRoElspnaWkzwcWFU="
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+          }
+        },
+        "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "GetAllMusicLambdaFunction"
+            },
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+          }
+        },
+        "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "SubscribeUserLambdaFunction"
+            },
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+          }
+        },
+        "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "CreateNotificationLambdaFunction"
+            },
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
+          }
+        },
+        "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA": {
+          "Type": "AWS::Lambda::Version",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "FunctionName": {
+              "Ref": "GetUserNotificationsLambdaFunction"
+            },
+            "CodeSha256": "yO4ccfUzndjImbouJyaoDDl/yRYcZTc+s1PWN0ZZ3PY="
           }
         },
         "CognitoUserPoolMapsterUserPool": {
@@ -4871,6 +6457,306 @@
           },
           "DependsOn": "HttpApiIntegrationCreateAlbum"
         },
+        "GetAllMusicLambdaPermissionHttpApi": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "GetAllMusicLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "HttpApi"
+                  },
+                  "/*"
+                ]
+              ]
+            }
+          }
+        },
+        "HttpApiIntegrationGetAllMusic": {
+          "Type": "AWS::ApiGatewayV2::Integration",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "IntegrationType": "AWS_PROXY",
+            "IntegrationUri": {
+              "Fn::GetAtt": [
+                "GetAllMusicLambdaFunction",
+                "Arn"
+              ]
+            },
+            "PayloadFormatVersion": "2.0",
+            "TimeoutInMillis": 30000
+          }
+        },
+        "HttpApiRouteGetMusicGetall": {
+          "Type": "AWS::ApiGatewayV2::Route",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "RouteKey": "GET /music/getAll",
+            "Target": {
+              "Fn::Join": [
+                "/",
+                [
+                  "integrations",
+                  {
+                    "Ref": "HttpApiIntegrationGetAllMusic"
+                  }
+                ]
+              ]
+            }
+          },
+          "DependsOn": "HttpApiIntegrationGetAllMusic"
+        },
+        "SubscribeUserLambdaPermissionHttpApi": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "SubscribeUserLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "HttpApi"
+                  },
+                  "/*"
+                ]
+              ]
+            }
+          }
+        },
+        "HttpApiIntegrationSubscribeUser": {
+          "Type": "AWS::ApiGatewayV2::Integration",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "IntegrationType": "AWS_PROXY",
+            "IntegrationUri": {
+              "Fn::GetAtt": [
+                "SubscribeUserLambdaFunction",
+                "Arn"
+              ]
+            },
+            "PayloadFormatVersion": "2.0",
+            "TimeoutInMillis": 30000
+          }
+        },
+        "HttpApiRoutePostSubscribe": {
+          "Type": "AWS::ApiGatewayV2::Route",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "RouteKey": "POST /subscribe",
+            "Target": {
+              "Fn::Join": [
+                "/",
+                [
+                  "integrations",
+                  {
+                    "Ref": "HttpApiIntegrationSubscribeUser"
+                  }
+                ]
+              ]
+            }
+          },
+          "DependsOn": "HttpApiIntegrationSubscribeUser"
+        },
+        "CreateNotificationLambdaPermissionHttpApi": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "CreateNotificationLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "HttpApi"
+                  },
+                  "/*"
+                ]
+              ]
+            }
+          }
+        },
+        "HttpApiIntegrationCreateNotification": {
+          "Type": "AWS::ApiGatewayV2::Integration",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "IntegrationType": "AWS_PROXY",
+            "IntegrationUri": {
+              "Fn::GetAtt": [
+                "CreateNotificationLambdaFunction",
+                "Arn"
+              ]
+            },
+            "PayloadFormatVersion": "2.0",
+            "TimeoutInMillis": 30000
+          }
+        },
+        "HttpApiRoutePostNotify": {
+          "Type": "AWS::ApiGatewayV2::Route",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "RouteKey": "POST /notify",
+            "Target": {
+              "Fn::Join": [
+                "/",
+                [
+                  "integrations",
+                  {
+                    "Ref": "HttpApiIntegrationCreateNotification"
+                  }
+                ]
+              ]
+            }
+          },
+          "DependsOn": "HttpApiIntegrationCreateNotification"
+        },
+        "GetUserNotificationsLambdaPermissionHttpApi": {
+          "Type": "AWS::Lambda::Permission",
+          "Properties": {
+            "FunctionName": {
+              "Fn::GetAtt": [
+                "GetUserNotificationsLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Action": "lambda:InvokeFunction",
+            "Principal": "apigateway.amazonaws.com",
+            "SourceArn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":execute-api:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "HttpApi"
+                  },
+                  "/*"
+                ]
+              ]
+            }
+          }
+        },
+        "HttpApiIntegrationGetUserNotifications": {
+          "Type": "AWS::ApiGatewayV2::Integration",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "IntegrationType": "AWS_PROXY",
+            "IntegrationUri": {
+              "Fn::GetAtt": [
+                "GetUserNotificationsLambdaFunction",
+                "Arn"
+              ]
+            },
+            "PayloadFormatVersion": "2.0",
+            "TimeoutInMillis": 30000
+          }
+        },
+        "HttpApiRouteGetGetusernotifications": {
+          "Type": "AWS::ApiGatewayV2::Route",
+          "Properties": {
+            "ApiId": {
+              "Ref": "HttpApi"
+            },
+            "RouteKey": "GET /getUserNotifications",
+            "Target": {
+              "Fn::Join": [
+                "/",
+                [
+                  "integrations",
+                  {
+                    "Ref": "HttpApiIntegrationGetUserNotifications"
+                  }
+                ]
+              ]
+            }
+          },
+          "DependsOn": "HttpApiIntegrationGetUserNotifications"
+        },
         "ArtistsDynamoDBTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
@@ -4979,6 +6865,60 @@
             "BillingMode": "PAY_PER_REQUEST"
           }
         },
+        "SubscriptionsTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "back-subscriptions",
+            "BillingMode": "PAY_PER_REQUEST",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "userId",
+                "AttributeType": "S"
+              },
+              {
+                "AttributeName": "targetId",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "userId",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "targetId",
+                "KeyType": "RANGE"
+              }
+            ]
+          }
+        },
+        "NotificationsTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "back-notifications",
+            "BillingMode": "PAY_PER_REQUEST",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "userId",
+                "AttributeType": "S"
+              },
+              {
+                "AttributeName": "notificationId",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "userId",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "notificationId",
+                "KeyType": "RANGE"
+              }
+            ]
+          }
+        },
         "CognitoUserPool": {
           "Type": "AWS::Cognito::UserPool",
           "Properties": {
@@ -4986,9 +6926,7 @@
             "UsernameAttributes": [
               "email"
             ],
-            "AutoVerifiedAttributes": [
-              "email"
-            ],
+            "AutoVerifiedAttributes": [],
             "AdminCreateUserConfig": {
               "AllowAdminCreateUserOnly": false
             },
@@ -5072,7 +7010,7 @@
         "PreRegistrationLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "PreRegistrationLambdaVersionAKXDzplIOULhOcfBgu9YdqMyY2cFlw63yuso8mnJEU"
+            "Ref": "PreRegistrationLambdaVersion2DGZfb6tQRprl8OyTtOvS2s4CM69EFJZBCxwDbd7r18"
           },
           "Export": {
             "Name": "sls-back-dev-PreRegistrationLambdaFunctionQualifiedArn"
@@ -5081,7 +7019,7 @@
         "PostConfirmationLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "PostConfirmationLambdaVersionnVEC3Hjc4eqo6gkID08gkpXhAyRRkZlK69IdBlx0g"
+            "Ref": "PostConfirmationLambdaVersionBbKD0gMdjvYlgkvKovRcuwOrCQSjjXofG1ikAegjOjI"
           },
           "Export": {
             "Name": "sls-back-dev-PostConfirmationLambdaFunctionQualifiedArn"
@@ -5090,7 +7028,7 @@
         "CreateArtistLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "CreateArtistLambdaVersionXRcBNIcQuizW9f4uCZNYTPyHZwWFHlf03cxT2BhOss"
+            "Ref": "CreateArtistLambdaVersiondYDyL4myJIhPpkTtMrQoB8ATpCdM9xwFbUo3fdA9HY"
           },
           "Export": {
             "Name": "sls-back-dev-CreateArtistLambdaFunctionQualifiedArn"
@@ -5099,7 +7037,7 @@
         "FilterHandlerLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "FilterHandlerLambdaVersionxcpaNyIYB2zgby6MzUash0GSH8bnjSlcATWP6Ruwo4"
+            "Ref": "FilterHandlerLambdaVersionMQcMNAmNBveTlv0PoeITGQ4PtV1lFqa27PeffPVgPw"
           },
           "Export": {
             "Name": "sls-back-dev-FilterHandlerLambdaFunctionQualifiedArn"
@@ -5108,7 +7046,7 @@
         "GetArtistsLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "GetArtistsLambdaVersionOr6lCTfUZIYmJBox64zthGqmwUwQLERF6Ky6bbLIAI"
+            "Ref": "GetArtistsLambdaVersionJYYDZBiYyKzACrPDNHstN7VvDwIgPTsdvCPnz000btE"
           },
           "Export": {
             "Name": "sls-back-dev-GetArtistsLambdaFunctionQualifiedArn"
@@ -5117,7 +7055,7 @@
         "GetAlbumsLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "GetAlbumsLambdaVersionaexdNm4HP7tiymoKYDjlZgKZPApbS6cGQA4dvzWGuU"
+            "Ref": "GetAlbumsLambdaVersion2zNLhov1Jz5sR6iGts7zX3PwnBqfK8ditBsYDZz8As"
           },
           "Export": {
             "Name": "sls-back-dev-GetAlbumsLambdaFunctionQualifiedArn"
@@ -5126,7 +7064,7 @@
         "UploadMusicLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "UploadMusicLambdaVersionBxhLBzVN0fbjDMDUtwKULaEi9eQSMFR3mjUXhNAv4"
+            "Ref": "UploadMusicLambdaVersionzrpGIwRusClYiy1ftxCPvTWbvvmyMxkGALXgSwyRA"
           },
           "Export": {
             "Name": "sls-back-dev-UploadMusicLambdaFunctionQualifiedArn"
@@ -5135,7 +7073,7 @@
         "GetPresignedUrlLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "GetPresignedUrlLambdaVersion40lod21eFeku663WStYaTCA03zZLSkhXlVmKLbj3L0"
+            "Ref": "GetPresignedUrlLambdaVersionaGYEjALY5QB3BUTNBspswpdu0IAfG3DLc0GNnnmzE4"
           },
           "Export": {
             "Name": "sls-back-dev-GetPresignedUrlLambdaFunctionQualifiedArn"
@@ -5144,10 +7082,46 @@
         "CreateAlbumLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "CreateAlbumLambdaVersionOPFF91XqMi5i7QYBm1trBBRWWUFbwQGMycMCI8OJXO8"
+            "Ref": "CreateAlbumLambdaVersion5Wpb0tXlK0y0tR4DUbrHE8wCqcTkzxHPttMXVPjors"
           },
           "Export": {
             "Name": "sls-back-dev-CreateAlbumLambdaFunctionQualifiedArn"
+          }
+        },
+        "GetAllMusicLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "GetAllMusicLambdaVersionpDCjihGH2x2Z3dH8vBoyG8b6c3xl4N76V9LG565sNq8"
+          },
+          "Export": {
+            "Name": "sls-back-dev-GetAllMusicLambdaFunctionQualifiedArn"
+          }
+        },
+        "SubscribeUserLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "SubscribeUserLambdaVersionMIUpHcJBEMyDljg8s5rIAn7YgzvEzHWwG0mKk4uMCE"
+          },
+          "Export": {
+            "Name": "sls-back-dev-SubscribeUserLambdaFunctionQualifiedArn"
+          }
+        },
+        "CreateNotificationLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "CreateNotificationLambdaVersionbyhZWVdXqy00aq9wJi8uA7IhQm5uXPXkxdVZk6ZE"
+          },
+          "Export": {
+            "Name": "sls-back-dev-CreateNotificationLambdaFunctionQualifiedArn"
+          }
+        },
+        "GetUserNotificationsLambdaFunctionQualifiedArn": {
+          "Description": "Current Lambda function version",
+          "Value": {
+            "Ref": "GetUserNotificationsLambdaVersionyjujQaaAen3mW9wZAitT55Ug0pxcv6RL2IwgBACdLGA"
+          },
+          "Export": {
+            "Name": "sls-back-dev-GetUserNotificationsLambdaFunctionQualifiedArn"
           }
         },
         "HttpApiId": {
